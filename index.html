@@ -56,17 +56,9 @@
     .smsg{font-size:14px;color:var(--ink3);line-height:1.7;margin-bottom:6px}
     .smsg strong{color:var(--ink2);font-weight:600}
 
-    /* paused screen specific */
-    .paused-shop{
-      font-family:'Fraunces',serif;font-weight:600;
-      font-size:17px;color:var(--ink);margin-bottom:18px;
-    }
-    .paused-note{
-      background:var(--bg2);border:1px solid var(--br);
-      border-radius:12px;padding:14px 16px;
-      font-size:13px;color:var(--ink3);line-height:1.65;
-      margin-bottom:0;text-align:left;
-    }
+    /* paused screen */
+    .paused-shop{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--ink);margin-bottom:18px;}
+    .paused-note{background:var(--bg2);border:1px solid var(--br);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--ink3);line-height:1.65;margin-bottom:0;text-align:left;}
     .paused-note strong{color:var(--ink2);font-weight:600}
 
     /* buttons */
@@ -167,7 +159,7 @@
     <!-- LOADING -->
     <div id="vl"><div class="ring"></div><p class="ltxt">Loading…</p></div>
 
-    <!-- PAUSED — clean screen for customers, no payment mention -->
+    <!-- PAUSED -->
     <div id="vb" class="hidden">
       <div class="sico unavail">🔒</div>
       <div class="stitle">Reviews Temporarily Unavailable</div>
@@ -196,11 +188,11 @@
       <div id="sstars">
         <div class="sprompt">How was your experience?</div>
         <div class="stars">
-          <span class="star" onclick="pickStar(1)">⭐</span>
-          <span class="star" onclick="pickStar(2)">⭐</span>
-          <span class="star" onclick="pickStar(3)">⭐</span>
-          <span class="star" onclick="pickStar(4)">⭐</span>
-          <span class="star" onclick="pickStar(5)">⭐</span>
+          <span class="star" data-star="1">⭐</span>
+          <span class="star" data-star="2">⭐</span>
+          <span class="star" data-star="3">⭐</span>
+          <span class="star" data-star="4">⭐</span>
+          <span class="star" data-star="5">⭐</span>
         </div>
       </div>
 
@@ -215,20 +207,20 @@
 
         <div class="vlabel">Choose your style</div>
         <div class="vpills">
-          <button class="vp on" onclick="pickVibe('professional',this)"><span class="vi">🎯</span>Professional</button>
-          <button class="vp"    onclick="pickVibe('casual',this)"><span class="vi">😊</span>Casual</button>
-          <button class="vp"    onclick="pickVibe('short',this)"><span class="vi">⚡</span>Short</button>
+          <button class="vp on" data-vibe="professional"><span class="vi">🎯</span>Professional</button>
+          <button class="vp"    data-vibe="casual"><span class="vi">😊</span>Casual</button>
+          <button class="vp"    data-vibe="short"><span class="vi">⚡</span>Short</button>
         </div>
 
         <div class="lsw">
-          <button class="lb on" onclick="pickLang('en',this)">English</button>
-          <button class="lb"    onclick="pickLang('ml',this)">മലയാളം</button>
+          <button class="lb on" data-lang="en">English</button>
+          <button class="lb"    data-lang="ml">മലയാളം</button>
         </div>
 
         <div class="tawrap"><textarea id="rta" rows="4" spellcheck="false" placeholder="Your review…"></textarea></div>
 
         <div class="astrip">
-          <button class="bcopy" id="cbtn" onclick="doCopy()">📋 Copy</button>
+          <button class="bcopy" id="cbtn">📋 Copy</button>
           <a class="bgoog" id="glink" href="#" target="_blank">
             <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
             Open Google
@@ -244,7 +236,7 @@
         </div>
       </div>
 
-      <!-- LOW RATING: ethical complaint screen -->
+      <!-- LOW RATING -->
       <div class="lrsec" id="slow">
         <div class="low-header">
           <span class="low-ico">🙏</span>
@@ -277,287 +269,360 @@
 // ═══════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSeMEYUpCAtADW7E6M_gVHMb8I55BBiRzYUsuSLJiyshbgBKixj4fRGCbXIQlGQ_A/pub?gid=893478013&single=true&output=csv';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQu2IHRZK2ItfeTDoCu0jLltm8-mc_td_PgRiwgQwl-WHrH0hYk1pO8Hkx6m3jSXg/pub?gid=1658064660&single=true&output=csv';
 const DEFAULT_WA    = '9074592275';
 // ═══════════════════════════════════════
 
 const params = new URLSearchParams(location.search);
 const TOKEN  = params.get('token') || '';
 
-let rating=0, lang='en', vibe='professional';
-let customTpl={}, waNumber=DEFAULT_WA, googleUrl='';
+let rating = 0, lang = 'en', vibe = 'professional';
+let customTpl = {}, waNumber = DEFAULT_WA, googleUrl = '';
 
-function show(id){
-  ['vl','vb','vi','vr'].forEach(v=>document.getElementById(v).classList.add('hidden'));
+function show(id) {
+  ['vl','vb','vi','vr'].forEach(v => document.getElementById(v).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
 
-async function init(){
-  if(!TOKEN){show('vi');return}
-  try{
-    const res  = await fetch(SHEET_CSV_URL+'&t='+Date.now());
+// ── Event delegation: stars ──────────────────────────────────────
+document.querySelector('.stars').addEventListener('click', function(e) {
+  const star = e.target.closest('.star');
+  if (!star) return;
+  pickStar(parseInt(star.dataset.star, 10));
+});
+
+// ── Event delegation: vibe pills ─────────────────────────────────
+document.querySelector('.vpills').addEventListener('click', function(e) {
+  const btn = e.target.closest('.vp');
+  if (!btn) return;
+  document.querySelectorAll('.vp').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  vibe = btn.dataset.vibe;
+  genReview(false);
+});
+
+// ── Event delegation: lang switch ────────────────────────────────
+document.querySelector('.lsw').addEventListener('click', function(e) {
+  const btn = e.target.closest('.lb');
+  if (!btn) return;
+  document.querySelectorAll('.lb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  lang = btn.dataset.lang;
+  genReview(false);
+});
+
+// ── Copy button ──────────────────────────────────────────────────
+document.getElementById('cbtn').addEventListener('click', doCopy);
+
+// ────────────────────────────────────────────────────────────────
+
+async function init() {
+  if (!TOKEN) { show('vi'); return; }
+  try {
+    const res  = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
     const text = await res.text();
     const rows = parseCSVRows(text).slice(1);
     let found  = false;
-    for(const row of rows){
-      const c=csvRow(row);
-      if(!c[0]||c[0].trim()!==TOKEN.trim()) continue;
-      found=true;
-      const status  =(c[5]||'').trim().toLowerCase();
-      const shopName=(c[1]||'Shop').trim();
-      const shopCat =(c[2]||'Local Business').trim();
-      const placeId =(c[3]||'').trim();
-      const phone   =(c[4]||'').trim();
-      const tplRaw  =(c[7]||'').trim();
-      const waNum   =(c[8]||'').trim();
-      if(status==='active'){
-        if(tplRaw) parseCustomTpl(tplRaw);
-        if(waNum)  waNumber=waNum;
-        loadReview(shopName,shopCat,placeId,phone);
+    for (const row of rows) {
+      const c = csvRow(row);
+      if (!c[0] || c[0].trim() !== TOKEN.trim()) continue;
+      found = true;
+      const status   = (c[5] || '').trim().toLowerCase();
+      const shopName = (c[1] || 'Shop').trim();
+      const shopCat  = (c[2] || 'Local Business').trim();
+      const placeId  = (c[3] || '').trim();
+      const phone    = (c[4] || '').trim();
+      const tplRaw   = (c[7] || '').trim();
+      const waNum    = (c[8] || '').trim();
+      if (status === 'active') {
+        if (tplRaw) parseCustomTpl(tplRaw);
+        if (waNum)  waNumber = waNum;
+        loadReview(shopName, shopCat, placeId, phone);
       } else {
-        // paused — show clean message, no payment info, no subscription mention
         loadPaused(shopName);
       }
       break;
     }
-    if(!found) show('vi');
-  }catch(e){
-    const fn=params.get('name')||'Shop';
-    fn!=='Shop'
-      ?loadReview(fn,params.get('cat')||'',params.get('pid')||'',params.get('phone')||'')
-      :show('vi');
+    if (!found) show('vi');
+  } catch(e) {
+    const fn = params.get('name') || 'Shop';
+    fn !== 'Shop'
+      ? loadReview(fn, params.get('cat') || '', params.get('pid') || '', params.get('phone') || '')
+      : show('vi');
   }
 }
 
-function parseCSVRows(text){
-  const rows=[];let cur='',inQ=false;
-  for(let i=0;i<text.length;i++){
-    const ch=text[i];
-    if(ch==='"'){inQ=!inQ;cur+=ch;continue}
-    if(ch==='\n'&&!inQ){rows.push(cur);cur='';continue}
-    if(ch==='\r')continue;
-    cur+=ch;
+function parseCSVRows(text) {
+  const rows = []; let cur = '', inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === '"') { inQ = !inQ; cur += ch; continue; }
+    if (ch === '\n' && !inQ) { rows.push(cur); cur = ''; continue; }
+    if (ch === '\r') continue;
+    cur += ch;
   }
-  if(cur) rows.push(cur);
+  if (cur) rows.push(cur);
   return rows;
 }
 
-function csvRow(row){
-  const r=[];let cur='',inQ=false;
-  for(let i=0;i<row.length;i++){
-    if(row[i]==='"'){inQ=!inQ;continue}
-    if(row[i]===','&&!inQ){r.push(cur.replace(/[\r\n]+/g,' ').trim());cur='';continue}
-    cur+=row[i];
+function csvRow(row) {
+  const r = []; let cur = '', inQ = false;
+  for (let i = 0; i < row.length; i++) {
+    if (row[i] === '"') { inQ = !inQ; continue; }
+    if (row[i] === ',' && !inQ) { r.push(cur.replace(/[\r\n]+/g,' ').trim()); cur = ''; continue; }
+    cur += row[i];
   }
-  r.push(cur.replace(/[\r\n]+/g,' ').trim());return r;
+  r.push(cur.replace(/[\r\n]+/g,' ').trim());
+  return r;
 }
 
-function parseCustomTpl(raw){
-  customTpl={};
-  raw.split('|').forEach(seg=>{
-    seg=seg.trim();const colon=seg.indexOf(':');
-    if(colon<0)return;
-    const key=seg.slice(0,colon).trim().toLowerCase();
-    const val=seg.slice(colon+1).trim();
-    if(val) customTpl[key]=val.split('~~').map(s=>s.trim()).filter(Boolean);
+function parseCustomTpl(raw) {
+  customTpl = {};
+  raw.split('|').forEach(seg => {
+    seg = seg.trim(); const colon = seg.indexOf(':');
+    if (colon < 0) return;
+    const key = seg.slice(0, colon).trim().toLowerCase();
+    const val = seg.slice(colon + 1).trim();
+    if (val) customTpl[key] = val.split('~~').map(s => s.trim()).filter(Boolean);
   });
 }
 
-function loadPaused(shopName){
-  // No payment link, no subscription mention — just a clean neutral message
+function loadPaused(shopName) {
   document.getElementById('bshop').textContent = shopName;
   show('vb');
 }
 
-function loadReview(shopName,shopCat,placeId,phone){
-  document.getElementById('sinit').textContent=shopName.charAt(0).toUpperCase();
-  document.getElementById('sname').textContent=shopName;
-  document.getElementById('scat').textContent=shopCat;
-  window._sname=shopName; window._scat=shopCat;
+function loadReview(shopName, shopCat, placeId, phone) {
+  document.getElementById('sinit').textContent = shopName.charAt(0).toUpperCase();
+  document.getElementById('sname').textContent = shopName;
+  document.getElementById('scat').textContent  = shopCat;
+  window._sname = shopName; window._scat = shopCat;
 
-  googleUrl=placeId
-    ?`https://search.google.com/local/writereview?placeid=${placeId}`
-    :`https://www.google.com/maps/search/${encodeURIComponent(shopName)}`;
+  googleUrl = placeId
+    ? `https://search.google.com/local/writereview?placeid=${placeId}`
+    : `https://www.google.com/maps/search/${encodeURIComponent(shopName)}`;
 
-  document.getElementById('glink').href=googleUrl;
-  document.getElementById('glink-low').href=googleUrl;
+  document.getElementById('glink').href     = googleUrl;
+  document.getElementById('glink-low').href = googleUrl;
 
-  const waTxt=encodeURIComponent(`Hi, I visited ${shopName} recently and had a bad experience I'd like to share.`);
-  const waUrl=phone
-    ?`https://wa.me/91${phone.replace(/\D/,'')}?text=${waTxt}`
-    :`https://wa.me/${waNumber||DEFAULT_WA}?text=${waTxt}`;
-  document.getElementById('walnik').href=waUrl;
+  const waTxt = encodeURIComponent(`Hi, I visited ${shopName} recently and had a bad experience I'd like to share.`);
+  const waUrl = phone
+    ? `https://wa.me/91${phone.replace(/\D/,'')}?text=${waTxt}`
+    : `https://wa.me/${waNumber || DEFAULT_WA}?text=${waTxt}`;
+  document.getElementById('walnik').href = waUrl;
 
   show('vr');
 }
 
-function pickStar(val){
-  rating=val;
-  document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<val));
-  if(val<=2){
-    document.getElementById('sstars').style.opacity='0.4';
+function pickStar(val) {
+  rating = val;
+  document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('on', i < val));
+
+  if (val <= 2) {
+    document.getElementById('sstars').style.opacity = '0.4';
     document.getElementById('srev').classList.remove('show');
     document.getElementById('slow').classList.add('show');
     return;
   }
+
   document.getElementById('slow').classList.remove('show');
   document.getElementById('srev').classList.add('show');
-  document.getElementById('sstars').style.opacity='1';
-  const map={5:['Excellent! 🎉','b5'],4:['Great! 👍','b4'],3:['Okay 👌','b3']};
-  const[txt,cls]=map[val]||['Thanks!','b3'];
-  const b=document.getElementById('rbadge');
-  b.textContent=txt;b.className=`rbadge ${cls}`;
+  document.getElementById('sstars').style.opacity = '1';
+
+  const map = { 5: ['Excellent! 🎉','b5'], 4: ['Great! 👍','b4'], 3: ['Okay 👌','b3'] };
+  const [txt, cls] = map[val] || ['Thanks!','b3'];
+  const b = document.getElementById('rbadge');
+  b.textContent = txt; b.className = `rbadge ${cls}`;
+
   genReview(true);
 }
 
-function getPool(){
-  const name=window._sname||'this shop';
-  const keys=[`${lang}_${rating}_${vibe}`,`${lang}_${rating}`,`en_${rating}_${vibe}`,`en_${rating}`];
-  for(const k of keys){
-    if(customTpl[k]?.length) return customTpl[k].map(t=>t.replace(/{name}/g,name));
+function getPool() {
+  const name = window._sname || 'this shop';
+  const keys = [
+    `${lang}_${rating}_${vibe}`,
+    `${lang}_${rating}`,
+    `en_${rating}_${vibe}`,
+    `en_${rating}`
+  ];
+  for (const k of keys) {
+    if (customTpl[k]?.length) return customTpl[k].map(t => t.replace(/{name}/g, name));
   }
-  return getCatPool(name,window._scat||'',lang,vibe,rating);
+  return getCatPool(name, window._scat || '', lang, vibe, rating);
 }
 
-function getCatPool(name,cat,l,v,r){
-  cat=cat.toLowerCase();
-  const isFood    =/restaurant|bakery|cafe|food|hotel|dhaba|canteen|biryani|sweet/.test(cat);
-  const isAuto    =/car|auto|vehicle|bike|motor|garage|mechanic|tyre/.test(cat);
-  const isMedical =/pharmacy|hospital|clinic|doctor|medical|health|dental/.test(cat);
-  const isRetail  =/shop|store|grocery|supermarket|mart|boutique|cloth/.test(cat);
-  const isService =/salon|spa|beauty|parlour|repair|plumber|electrician|tailor/.test(cat);
+function getCatPool(name, cat, l, v, r) {
+  cat = cat.toLowerCase();
+  const isFood    = /restaurant|bakery|cafe|food|hotel|dhaba|canteen|biryani|sweet/.test(cat);
+  const isAuto    = /car|auto|vehicle|bike|motor|garage|mechanic|tyre/.test(cat);
+  const isMedical = /pharmacy|hospital|clinic|doctor|medical|health|dental/.test(cat);
+  const isRetail  = /shop|store|grocery|supermarket|mart|boutique|cloth/.test(cat);
+  const isService = /salon|spa|beauty|parlour|repair|plumber|electrician|tailor/.test(cat);
 
-  const T={
-    en:{
-      food:{
-        5:{professional:[`I had an outstanding dining experience at {name}. Food quality was exceptional, service was attentive, and the atmosphere was welcoming. Highly recommended in Kannur.`,`{name} exceeded every expectation. Fresh ingredients, perfectly prepared dishes, warm service. One of the best dining options in the area.`],
-           casual:[`Absolutely loved the food at {name}! Everything tasted amazing, portions generous, staff so friendly. Already planning my next visit!`,`{name} is a gem! Great flavours, cosy atmosphere, amazing staff. If you're in Kannur and hungry, this is the place!`],
-           short:[`Fantastic food at {name}! Fresh, tasty, great service. Best in Kannur! ⭐⭐⭐⭐⭐`]},
-        4:{professional:[`{name} provided a very good dining experience. Food was tasty and freshly prepared, service was prompt and courteous. A reliable choice in Kannur.`],
-           casual:[`Really enjoyed my meal at {name}! Good food, friendly staff, reasonable prices. Definitely coming back!`],
-           short:[`Good food at {name}. Fresh and tasty. Worth a visit! 👍`]},
-        3:{professional:[`My visit to {name} was satisfactory. Food was adequate and service reasonable, though there is room for improvement.`],
-           casual:[`{name} was okay. Food decent, nothing too special but not bad. Might try again.`],
-           short:[`Decent food at {name}. Average experience overall.`]}
+  const T = {
+    en: {
+      food: {
+        5: {
+          professional: [`I had an outstanding dining experience at ${name}. Food quality was exceptional, service was attentive, and the atmosphere was welcoming. Highly recommended in Kannur.`,`${name} exceeded every expectation. Fresh ingredients, perfectly prepared dishes, warm service. One of the best dining options in the area.`],
+          casual:       [`Absolutely loved the food at ${name}! Everything tasted amazing, portions generous, staff so friendly. Already planning my next visit!`,`${name} is a gem! Great flavours, cosy atmosphere, amazing staff. If you're in Kannur and hungry, this is the place!`],
+          short:        [`Fantastic food at ${name}! Fresh, tasty, great service. Best in Kannur! ⭐⭐⭐⭐⭐`]
+        },
+        4: {
+          professional: [`${name} provided a very good dining experience. Food was tasty and freshly prepared, service was prompt and courteous. A reliable choice in Kannur.`],
+          casual:       [`Really enjoyed my meal at ${name}! Good food, friendly staff, reasonable prices. Definitely coming back!`],
+          short:        [`Good food at ${name}. Fresh and tasty. Worth a visit! 👍`]
+        },
+        3: {
+          professional: [`My visit to ${name} was satisfactory. Food was adequate and service reasonable, though there is room for improvement.`],
+          casual:       [`${name} was okay. Food decent, nothing too special but not bad. Might try again.`],
+          short:        [`Decent food at ${name}. Average experience overall.`]
+        }
       },
-      auto:{
-        5:{professional:[`{name} delivered an excellent automotive experience. Staff were knowledgeable, transparent about pricing, and genuinely helpful. Highly recommended in Kannur.`,`Outstanding service at {name}. Fair prices, expert advice, no pressure. Best automotive option around.`],
-           casual:[`Loved my experience at {name}! Honest pricing, really helpful staff, smooth from start to finish. 100% recommend!`],
-           short:[`Excellent! {name} — honest pricing, helpful staff. Top choice in Kannur! ⭐⭐⭐⭐⭐`]},
-        4:{professional:[`{name} provided good professional automotive service. Fair pricing and knowledgeable staff made the process straightforward.`],
-           casual:[`Good experience at {name}. Helpful staff, fair prices, smooth process. Would recommend!`],
-           short:[`Good service at {name}. Fair prices, helpful team. Recommend! 👍`]},
-        3:{professional:[`{name} offered a reasonable automotive experience. Adequate service with room for improvement.`],
-           casual:[`{name} was okay. Decent, staff helpful enough. Average experience.`],
-           short:[`Decent experience at {name}. Average overall.`]}
+      auto: {
+        5: {
+          professional: [`${name} delivered an excellent automotive experience. Staff were knowledgeable, transparent about pricing, and genuinely helpful. Highly recommended in Kannur.`,`Outstanding service at ${name}. Fair prices, expert advice, no pressure. Best automotive option around.`],
+          casual:       [`Loved my experience at ${name}! Honest pricing, really helpful staff, smooth from start to finish. 100% recommend!`],
+          short:        [`Excellent! ${name} — honest pricing, helpful staff. Top choice in Kannur! ⭐⭐⭐⭐⭐`]
+        },
+        4: {
+          professional: [`${name} provided good professional automotive service. Fair pricing and knowledgeable staff made the process straightforward.`],
+          casual:       [`Good experience at ${name}. Helpful staff, fair prices, smooth process. Would recommend!`],
+          short:        [`Good service at ${name}. Fair prices, helpful team. Recommend! 👍`]
+        },
+        3: {
+          professional: [`${name} offered a reasonable automotive experience. Adequate service with room for improvement.`],
+          casual:       [`${name} was okay. Decent, staff helpful enough. Average experience.`],
+          short:        [`Decent experience at ${name}. Average overall.`]
+        }
       },
-      medical:{
-        5:{professional:[`{name} provided exceptional professional service. Staff were knowledgeable, courteous, and thorough. Felt genuinely well cared for. Highly recommended.`],
-           casual:[`Really happy with {name}! Staff so helpful and professional, felt completely comfortable. Would recommend to everyone.`],
-           short:[`Excellent service at {name}. Professional and caring. Highly recommend! ⭐⭐⭐⭐⭐`]},
-        4:{professional:[`{name} provided good professional service with knowledgeable staff. A reliable healthcare choice in Kannur.`],
-           casual:[`Good experience at {name}. Helpful staff, professional service. Would recommend!`],
-           short:[`Good service at {name}. Professional and reliable. 👍`]},
-        3:{professional:[`{name} provided satisfactory service though certain aspects could benefit from improvement.`],
-           casual:[`{name} was okay. Service fine, staff helpful enough.`],
-           short:[`Decent experience at {name}. Average service.`]}
+      medical: {
+        5: {
+          professional: [`${name} provided exceptional professional service. Staff were knowledgeable, courteous, and thorough. Felt genuinely well cared for. Highly recommended.`],
+          casual:       [`Really happy with ${name}! Staff so helpful and professional, felt completely comfortable. Would recommend to everyone.`],
+          short:        [`Excellent service at ${name}. Professional and caring. Highly recommend! ⭐⭐⭐⭐⭐`]
+        },
+        4: {
+          professional: [`${name} provided good professional service with knowledgeable staff. A reliable healthcare choice in Kannur.`],
+          casual:       [`Good experience at ${name}. Helpful staff, professional service. Would recommend!`],
+          short:        [`Good service at ${name}. Professional and reliable. 👍`]
+        },
+        3: {
+          professional: [`${name} provided satisfactory service though certain aspects could benefit from improvement.`],
+          casual:       [`${name} was okay. Service fine, staff helpful enough.`],
+          short:        [`Decent experience at ${name}. Average service.`]
+        }
       },
-      retail:{
-        5:{professional:[`{name} offers an exceptional retail experience. Extensive selection, knowledgeable staff, fair pricing. My go-to shop in Kannur.`,`Thoroughly impressed by {name}. Great variety, excellent quality, very friendly service.`],
-           casual:[`Love shopping at {name}! Great selection, really helpful staff, reasonable prices. Highly recommend!`],
-           short:[`Excellent shop! {name} — great selection, helpful staff. Best in Kannur! ⭐⭐⭐⭐⭐`]},
-        4:{professional:[`{name} is a reliable retail option with good product selection and helpful staff. Fair pricing and a pleasant experience.`],
-           casual:[`Happy with my shopping at {name}. Good variety, helpful team, fair prices. Would recommend!`],
-           short:[`Good shop! {name} — nice selection, helpful staff. Recommend! 👍`]},
-        3:{professional:[`{name} offers a satisfactory shopping experience with reasonable selection and pricing.`],
-           casual:[`{name} is okay for shopping. Basic selection, staff were helpful enough.`],
-           short:[`Decent shop. {name} gets the job done.`]}
+      retail: {
+        5: {
+          professional: [`${name} offers an exceptional retail experience. Extensive selection, knowledgeable staff, fair pricing. My go-to shop in Kannur.`,`Thoroughly impressed by ${name}. Great variety, excellent quality, very friendly service.`],
+          casual:       [`Love shopping at ${name}! Great selection, really helpful staff, reasonable prices. Highly recommend!`],
+          short:        [`Excellent shop! ${name} — great selection, helpful staff. Best in Kannur! ⭐⭐⭐⭐⭐`]
+        },
+        4: {
+          professional: [`${name} is a reliable retail option with good product selection and helpful staff. Fair pricing and a pleasant experience.`],
+          casual:       [`Happy with my shopping at ${name}. Good variety, helpful team, fair prices. Would recommend!`],
+          short:        [`Good shop! ${name} — nice selection, helpful staff. Recommend! 👍`]
+        },
+        3: {
+          professional: [`${name} offers a satisfactory shopping experience with reasonable selection and pricing.`],
+          casual:       [`${name} is okay for shopping. Basic selection, staff were helpful enough.`],
+          short:        [`Decent shop. ${name} gets the job done.`]
+        }
       },
-      service:{
-        5:{professional:[`{name} delivered outstanding service. Work completed to a very high standard with great attention to detail and excellent customer care.`],
-           casual:[`Loved the service at {name}! Really skilled, super friendly, the result was amazing. Definitely coming back!`],
-           short:[`Excellent work at {name}. Skilled, professional, highly recommend! ⭐⭐⭐⭐⭐`]},
-        4:{professional:[`{name} provided good quality service with professional staff and satisfactory results. A reliable option in Kannur.`],
-           casual:[`Happy with {name}. Good service, friendly staff, good result. Would recommend!`],
-           short:[`Good service at {name}. Reliable and professional. 👍`]},
-        3:{professional:[`{name} provided adequate service though there is room for improvement.`],
-           casual:[`{name} was okay. Service fine, nothing exceptional.`],
-           short:[`Decent service at {name}. Average experience.`]}
+      service: {
+        5: {
+          professional: [`${name} delivered outstanding service. Work completed to a very high standard with great attention to detail and excellent customer care.`],
+          casual:       [`Loved the service at ${name}! Really skilled, super friendly, the result was amazing. Definitely coming back!`],
+          short:        [`Excellent work at ${name}. Skilled, professional, highly recommend! ⭐⭐⭐⭐⭐`]
+        },
+        4: {
+          professional: [`${name} provided good quality service with professional staff and satisfactory results. A reliable option in Kannur.`],
+          casual:       [`Happy with ${name}. Good service, friendly staff, good result. Would recommend!`],
+          short:        [`Good service at ${name}. Reliable and professional. 👍`]
+        },
+        3: {
+          professional: [`${name} provided adequate service though there is room for improvement.`],
+          casual:       [`${name} was okay. Service fine, nothing exceptional.`],
+          short:        [`Decent service at ${name}. Average experience.`]
+        }
       },
-      generic:{
-        5:{professional:[`I had an excellent experience at {name}. Service was outstanding, quality impressive, staff genuinely helpful and professional. Highly recommended in Kannur.`,`{name} exceeded all expectations. Every aspect handled with professionalism and care. Five stars well deserved.`],
-           casual:[`Really loved my visit to {name}! Everything great — friendly staff, good quality, fair prices. Will definitely be back!`,`{name} is amazing! One of the best experiences in Kannur. Super friendly, great quality!`],
-           short:[`Excellent experience at {name}. Great quality, friendly staff. Highly recommend! ⭐⭐⭐⭐⭐`]},
-        4:{professional:[`I had a very positive experience at {name}. Quality was solid, staff were helpful, overall visit was pleasant. A trustworthy establishment.`],
-           casual:[`Really happy with my visit to {name}! Good quality, helpful staff, good value. Definitely coming back!`],
-           short:[`Good experience at {name}. Quality service, helpful staff. Recommend! 👍`]},
-        3:{professional:[`My visit to {name} was satisfactory. Some positive aspects, though certain areas could be improved.`],
-           casual:[`{name} was okay. Some things good, some could be better. Average overall.`],
-           short:[`Decent experience at {name}. Average overall.`]}
+      generic: {
+        5: {
+          professional: [`I had an excellent experience at ${name}. Service was outstanding, quality impressive, staff genuinely helpful and professional. Highly recommended in Kannur.`,`${name} exceeded all expectations. Every aspect handled with professionalism and care. Five stars well deserved.`],
+          casual:       [`Really loved my visit to ${name}! Everything great — friendly staff, good quality, fair prices. Will definitely be back!`,`${name} is amazing! One of the best experiences in Kannur. Super friendly, great quality!`],
+          short:        [`Excellent experience at ${name}. Great quality, friendly staff. Highly recommend! ⭐⭐⭐⭐⭐`]
+        },
+        4: {
+          professional: [`I had a very positive experience at ${name}. Quality was solid, staff were helpful, overall visit was pleasant. A trustworthy establishment.`],
+          casual:       [`Really happy with my visit to ${name}! Good quality, helpful staff, good value. Definitely coming back!`],
+          short:        [`Good experience at ${name}. Quality service, helpful staff. Recommend! 👍`]
+        },
+        3: {
+          professional: [`My visit to ${name} was satisfactory. Some positive aspects, though certain areas could be improved.`],
+          casual:       [`${name} was okay. Some things good, some could be better. Average overall.`],
+          short:        [`Decent experience at ${name}. Average overall.`]
+        }
       }
     },
-    ml:{
-      generic:{
-        5:{professional:[`{name}-ൽ excellent experience ആണ്. Service outstanding, quality impressive, staff professional. Kannur-ൽ highly recommended.`,`{name} exceeded all expectations. Professional, caring, top quality. Five stars well deserved!`],
-           casual:[`{name}-ൽ visit ചെയ്തതിൽ വളരെ സന്തോഷം! Friendly staff, good quality, fair prices. Definitely coming back!`,`{name} amazing! Kannur-ൽ best experience. Super friendly, great quality!`],
-           short:[`{name}-ൽ excellent! Great quality, friendly staff. Highly recommend! ⭐⭐⭐⭐⭐`]},
-        4:{professional:[`{name}-ൽ very positive experience. Quality solid, staff helpful. Reliable establishment.`],
-           casual:[`{name}-ൽ happy! Good quality, helpful staff. Come back ചെയ്യും!`],
-           short:[`{name} good experience. Recommend! 👍`]},
-        3:{professional:[`{name}-ൽ satisfactory visit. Positive aspects ഉണ്ട്, improvement needed in some areas.`],
-           casual:[`{name} okay ആണ്. ചിലത് good, ചിലത് improve ആകാം.`],
-           short:[`{name} decent. Average overall.`]}
+    ml: {
+      generic: {
+        5: {
+          professional: [`${name}-ൽ excellent experience ആണ്. Service outstanding, quality impressive, staff professional. Kannur-ൽ highly recommended.`,`${name} exceeded all expectations. Professional, caring, top quality. Five stars well deserved!`],
+          casual:       [`${name}-ൽ visit ചെയ്തതിൽ വളരെ സന്തോഷം! Friendly staff, good quality, fair prices. Definitely coming back!`,`${name} amazing! Kannur-ൽ best experience. Super friendly, great quality!`],
+          short:        [`${name}-ൽ excellent! Great quality, friendly staff. Highly recommend! ⭐⭐⭐⭐⭐`]
+        },
+        4: {
+          professional: [`${name}-ൽ very positive experience. Quality solid, staff helpful. Reliable establishment.`],
+          casual:       [`${name}-ൽ happy! Good quality, helpful staff. Come back ചെയ്യും!`],
+          short:        [`${name} good experience. Recommend! 👍`]
+        },
+        3: {
+          professional: [`${name}-ൽ satisfactory visit. Positive aspects ഉണ്ട്, improvement needed in some areas.`],
+          casual:       [`${name} okay ആണ്. ചിലത് good, ചിലത് improve ആകാം.`],
+          short:        [`${name} decent. Average overall.`]
+        }
       }
     }
   };
 
-  const lt=T[l]||T['en'];
-  let type='generic';
-  if(isFood)    type='food';
-  else if(isAuto)    type='auto';
-  else if(isMedical) type='medical';
-  else if(isRetail)  type='retail';
-  else if(isService) type='service';
+  const lt   = T[l] || T['en'];
+  let type   = 'generic';
+  if (isFood)    type = 'food';
+  else if (isAuto)    type = 'auto';
+  else if (isMedical) type = 'medical';
+  else if (isRetail)  type = 'retail';
+  else if (isService) type = 'service';
 
-  const bucket=lt[type]||lt['generic'];
-  const star=r<=3?3:r;
-  const pool=bucket[star]?.[v]||bucket[star]?.['professional']||bucket[3]?.['professional']||[`Great experience at ${name}!`];
-  return pool.map(t=>t.replace(/{name}/g,name));
+  const bucket = lt[type] || lt['generic'];
+  const star   = r <= 3 ? 3 : r;
+  const pool   = bucket[star]?.[v] || bucket[star]?.['professional'] || bucket[3]?.['professional'] || [`Great experience at ${name}!`];
+  return pool;
 }
 
-function genReview(autoCopy){
-  if(!rating||rating<=2) return;
-  const pool=getPool();
-  const text=pool[Math.floor(Math.random()*pool.length)];
-  document.getElementById('rta').value=text;
-  if(autoCopy){
-    navigator.clipboard.writeText(text).then(()=>{
-      const t=document.getElementById('act');
-      t.style.display='flex';
-      setTimeout(()=>{t.style.display='none'},4000);
-    }).catch(()=>{});
+function genReview(autoCopy) {
+  if (!rating || rating <= 2) return;
+  const pool = getPool();
+  const text = pool[Math.floor(Math.random() * pool.length)];
+  document.getElementById('rta').value = text;
+  if (autoCopy) {
+    navigator.clipboard.writeText(text).then(() => {
+      const t = document.getElementById('act');
+      t.style.display = 'flex';
+      setTimeout(() => { t.style.display = 'none'; }, 4000);
+    }).catch(() => {});
   }
 }
 
-function pickVibe(v,btn){
-  vibe=v;
-  document.querySelectorAll('.vp').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');genReview(false);
-}
-
-function pickLang(l,btn){
-  lang=l;
-  document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');genReview(false);
-}
-
-function doCopy(){
-  const text=document.getElementById('rta').value;
-  navigator.clipboard.writeText(text).then(()=>{
-    const b=document.getElementById('cbtn');
-    b.innerHTML='✓ Copied!';b.classList.add('ok');
-    setTimeout(()=>{b.innerHTML='📋 Copy';b.classList.remove('ok')},2500);
-  }).catch(()=>{document.getElementById('rta').select();document.execCommand('copy')});
+function doCopy() {
+  const text = document.getElementById('rta').value;
+  navigator.clipboard.writeText(text).then(() => {
+    const b = document.getElementById('cbtn');
+    b.innerHTML = '✓ Copied!'; b.classList.add('ok');
+    setTimeout(() => { b.innerHTML = '📋 Copy'; b.classList.remove('ok'); }, 2500);
+  }).catch(() => {
+    document.getElementById('rta').select();
+    document.execCommand('copy');
+  });
 }
 
 init();
