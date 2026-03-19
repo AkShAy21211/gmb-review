@@ -243,7 +243,6 @@
           </div>
         </div>
       </div>
-      
 
       <!-- LOW RATING: ethical complaint screen -->
       <div class="lrsec" id="slow">
@@ -298,7 +297,7 @@ async function init(){
   try{
     const res  = await fetch(SHEET_CSV_URL+'&t='+Date.now());
     const text = await res.text();
-    const rows = text.trim().split('\n').slice(1);
+    const rows = parseCSVRows(text).slice(1);
     let found  = false;
     for(const row of rows){
       const c=csvRow(row);
@@ -330,14 +329,27 @@ async function init(){
   }
 }
 
+function parseCSVRows(text){
+  const rows=[];let cur='',inQ=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(ch==='"'){inQ=!inQ;cur+=ch;continue}
+    if(ch==='\n'&&!inQ){rows.push(cur);cur='';continue}
+    if(ch==='\r')continue;
+    cur+=ch;
+  }
+  if(cur) rows.push(cur);
+  return rows;
+}
+
 function csvRow(row){
   const r=[];let cur='',inQ=false;
   for(let i=0;i<row.length;i++){
     if(row[i]==='"'){inQ=!inQ;continue}
-    if(row[i]===','&&!inQ){r.push(cur);cur='';continue}
+    if(row[i]===','&&!inQ){r.push(cur.replace(/[\r\n]+/g,' ').trim());cur='';continue}
     cur+=row[i];
   }
-  r.push(cur);return r;
+  r.push(cur.replace(/[\r\n]+/g,' ').trim());return r;
 }
 
 function parseCustomTpl(raw){
@@ -498,6 +510,7 @@ function getCatPool(name,cat,l,v,r){
       }
     }
   };
+
   const lt=T[l]||T['en'];
   let type='generic';
   if(isFood)    type='food';
