@@ -9,7 +9,6 @@
     :root {
       --gold:#E8A020;--gold-lt:#FFF4E0;--gold-glow:rgba(232,160,32,.16);
       --green:#1DB97A;--green-lt:#E6FBF2;
-      --red:#E5484D;--red-lt:#FFF0F0;
       --wa:#25D366;
       --ink:#12110F;--ink2:#3D3A36;--ink3:#8C8680;--ink4:#C2BDB7;
       --bg:#FDFCFB;--bg2:#F5F3F0;
@@ -49,24 +48,34 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     .ltxt{font-size:13px;color:var(--ink3);font-weight:500}
 
-    /* status */
-    .sico{width:68px;height:68px;border-radius:18px;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;font-size:30px}
-    .sico.pause{background:#FFF4E0}.sico.bad{background:#FFF0F0}
-    .stitle{font-family:'Fraunces',serif;font-weight:700;font-size:23px;color:var(--ink);margin-bottom:8px}
-    .smsg{font-size:14px;color:var(--ink3);line-height:1.65;margin-bottom:26px}
+    /* status screens */
+    .sico{width:72px;height:72px;border-radius:20px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:32px}
+    .sico.unavail{background:#F5F3F0}
+    .sico.bad{background:#FFF0F0}
+    .stitle{font-family:'Fraunces',serif;font-weight:700;font-size:22px;color:var(--ink);margin-bottom:10px;line-height:1.25}
+    .smsg{font-size:14px;color:var(--ink3);line-height:1.7;margin-bottom:6px}
     .smsg strong{color:var(--ink2);font-weight:600}
+
+    /* paused screen specific */
+    .paused-shop{
+      font-family:'Fraunces',serif;font-weight:600;
+      font-size:17px;color:var(--ink);margin-bottom:18px;
+    }
+    .paused-note{
+      background:var(--bg2);border:1px solid var(--br);
+      border-radius:12px;padding:14px 16px;
+      font-size:13px;color:var(--ink3);line-height:1.65;
+      margin-bottom:0;text-align:left;
+    }
+    .paused-note strong{color:var(--ink2);font-weight:600}
 
     /* buttons */
     .btn{width:100%;padding:14px 20px;border-radius:13px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s;-webkit-tap-highlight-color:transparent;letter-spacing:.1px}
     .btn:active{transform:scale(.975)}
-    .btn-gold{background:var(--gold);color:#fff;box-shadow:0 2px 10px rgba(232,160,32,.32);margin-bottom:10px}
-    .btn-gold:hover{background:#D4901A;transform:translateY(-1px)}
     .btn-out{background:var(--bg);color:var(--ink2);border:1.5px solid var(--br2);box-shadow:0 1px 3px var(--sh);font-weight:600;margin-bottom:10px}
     .btn-out:hover{border-color:var(--gold);color:var(--gold)}
     .btn-wa{background:var(--wa);color:#fff;box-shadow:0 2px 10px rgba(37,211,102,.28);margin-bottom:10px}
     .btn-wa:hover{background:#20BD6B;transform:translateY(-1px)}
-    .btn-google-sm{background:var(--bg);color:var(--ink3);border:1.5px solid var(--br);box-shadow:0 1px 3px var(--sh);font-weight:600;font-size:14px}
-    .btn-google-sm:hover{border-color:#4285F4;color:#4285F4}
 
     /* shop header */
     .avatar{width:64px;height:64px;border-radius:17px;background:linear-gradient(135deg,#F5C842 0%,var(--gold) 60%,#C8840E 100%);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:26px;color:#fff;margin:0 auto 13px;box-shadow:0 4px 18px rgba(232,160,32,.28)}
@@ -126,41 +135,19 @@
     .schip{display:flex;align-items:center;gap:5px;background:var(--bg);border:1px solid var(--br);border-radius:7px;padding:5px 8px;font-size:11px;font-weight:600;color:var(--ink2);white-space:nowrap}
     .snum{width:15px;height:15px;background:var(--gold);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
 
-    /* ── LOW RATING SCREEN ── */
+    /* low rating screen */
     .low-header{margin-bottom:20px}
     .low-ico{font-size:40px;display:block;margin-bottom:10px}
     .low-title{font-family:'Fraunces',serif;font-weight:700;font-size:20px;color:var(--ink);margin-bottom:6px}
     .low-sub{font-size:14px;color:var(--ink3);line-height:1.6}
-
-    /* resolve card */
-    .resolve-card{
-      background:var(--bg2);border:1.5px solid var(--br);
-      border-radius:14px;padding:16px;margin-bottom:12px;text-align:left;
-    }
-    .resolve-card-title{
-      font-size:12px;font-weight:700;color:var(--ink3);
-      letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px;
-    }
+    .resolve-card{background:var(--bg2);border:1.5px solid var(--br);border-radius:14px;padding:16px;margin-bottom:12px;text-align:left}
+    .resolve-card-title{font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px}
     .resolve-card p{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:12px}
-
-    /* divider */
-    .or-divider{
-      display:flex;align-items:center;gap:10px;margin:4px 0 12px;
-    }
+    .or-divider{display:flex;align-items:center;gap:10px;margin:4px 0 12px}
     .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--br)}
     .or-divider span{font-size:11px;font-weight:700;color:var(--ink4);letter-spacing:.5px}
-
-    /* google-anyway row */
-    .google-anyway{
-      display:flex;align-items:center;justify-content:center;gap:6px;
-      padding:11px 16px;border-radius:11px;
-      border:1.5px solid var(--br);background:var(--bg);
-      text-decoration:none;
-      font-size:13px;font-weight:600;color:var(--ink3);
-      transition:all .18s;-webkit-tap-highlight-color:transparent;
-    }
-    .google-anyway:hover{border-color:#4285F4;color:#4285F4}
-    .google-anyway:active{transform:scale(.975)}
+    .google-anyway{display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:11px;border:1.5px solid var(--br);background:var(--bg);text-decoration:none;font-size:13px;font-weight:600;color:var(--ink3);transition:all .18s;-webkit-tap-highlight-color:transparent}
+    .google-anyway:hover{border-color:#4285F4;color:#4285F4}.google-anyway:active{transform:scale(.975)}
     .google-anyway-label{font-size:11px;color:var(--ink4);margin-top:8px;line-height:1.5}
 
     /* footer */
@@ -178,18 +165,18 @@
   <div class="body">
 
     <!-- LOADING -->
-    <div id="vl"><div class="ring"></div><p class="ltxt">Checking subscription…</p></div>
+    <div id="vl"><div class="ring"></div><p class="ltxt">Loading…</p></div>
 
-    <!-- BLOCKED -->
+    <!-- PAUSED — clean screen for customers, no payment mention -->
     <div id="vb" class="hidden">
-      <div class="sico pause">⏸️</div>
-      <div class="stitle">Service Paused</div>
-      <div class="smsg" id="bmsg">The review page for this business is currently inactive.<br>Please contact GMB AutoPilot to reactivate.</div>
-      <a class="btn btn-gold" id="plink" href="#" target="_blank">💳 Pay ₹499 to Reactivate</a>
-      <a class="btn btn-out"  id="cwa"   href="#" target="_blank">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        WhatsApp GMB AutoPilot
-      </a>
+      <div class="sico unavail">🔒</div>
+      <div class="stitle">Reviews Temporarily Unavailable</div>
+      <div class="smsg" id="bmsg">Online reviews are currently paused for this business.</div>
+      <div class="paused-shop" id="bshop"></div>
+      <div class="paused-note">
+        <strong>Want to share feedback?</strong><br>
+        You can visit <a href="https://www.google.com/maps" target="_blank" style="color:var(--gold);font-weight:600;text-decoration:none">Google Maps</a> and search for the business directly to leave a review.
+      </div>
     </div>
 
     <!-- INVALID -->
@@ -259,32 +246,25 @@
 
       <!-- LOW RATING: ethical complaint screen -->
       <div class="lrsec" id="slow">
-
         <div class="low-header">
           <span class="low-ico">🙏</span>
           <div class="low-title">We're sorry to hear that</div>
           <div class="low-sub">We'd love a chance to make it right before anything else.</div>
         </div>
-
-        <!-- Primary: contact owner -->
         <div class="resolve-card">
           <div class="resolve-card-title">💬 Talk to us first</div>
-          <p>Tell the owner directly what went wrong. Most issues can be resolved quickly — and you might be pleasantly surprised.</p>
+          <p>Tell the owner directly what went wrong. Most issues can be resolved quickly.</p>
           <a class="btn btn-wa" id="walnik" href="#" target="_blank">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             Message the Owner on WhatsApp
           </a>
         </div>
-
-        <!-- Always visible: Google option -->
         <div class="or-divider"><span>OR</span></div>
-
         <a class="google-anyway" id="glink-low" href="#" target="_blank">
           <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Leave a Google review instead
         </a>
         <p class="google-anyway-label">You always have the right to share your honest experience publicly.</p>
-
       </div>
 
       <div class="pw">Powered by <a href="#">GMB AutoPilot</a><span class="dot"></span>Kannur</div>
@@ -303,7 +283,6 @@ const DEFAULT_WA    = '9074592275';
 
 const params = new URLSearchParams(location.search);
 const TOKEN  = params.get('token') || '';
-const RZPAY  = params.get('pay')   || '#';
 
 let rating=0, lang='en', vibe='professional';
 let customTpl={}, waNumber=DEFAULT_WA, googleUrl='';
@@ -329,7 +308,6 @@ async function init(){
       const shopCat =(c[2]||'Local Business').trim();
       const placeId =(c[3]||'').trim();
       const phone   =(c[4]||'').trim();
-      const payLink =(c[6]||RZPAY).trim();
       const tplRaw  =(c[7]||'').trim();
       const waNum   =(c[8]||'').trim();
       if(status==='active'){
@@ -337,7 +315,8 @@ async function init(){
         if(waNum)  waNumber=waNum;
         loadReview(shopName,shopCat,placeId,phone);
       } else {
-        loadBlocked(shopName,payLink);
+        // paused — show clean message, no payment info, no subscription mention
+        loadPaused(shopName);
       }
       break;
     }
@@ -371,12 +350,9 @@ function parseCustomTpl(raw){
   });
 }
 
-function loadBlocked(shopName,payLink){
-  document.getElementById('bmsg').innerHTML=
-    `The review page for <strong>${shopName}</strong> is currently paused.<br>Please renew your GMB AutoPilot subscription to reactivate.`;
-  document.getElementById('plink').href=payLink;
-  document.getElementById('cwa').href=
-    `https://wa.me/${DEFAULT_WA}?text=${encodeURIComponent(`Hi, I'd like to reactivate GMB AutoPilot for ${shopName}`)}`;
+function loadPaused(shopName){
+  // No payment link, no subscription mention — just a clean neutral message
+  document.getElementById('bshop').textContent = shopName;
   show('vb');
 }
 
@@ -391,7 +367,7 @@ function loadReview(shopName,shopCat,placeId,phone){
     :`https://www.google.com/maps/search/${encodeURIComponent(shopName)}`;
 
   document.getElementById('glink').href=googleUrl;
-  document.getElementById('glink-low').href=googleUrl; // always set on low-rating screen too
+  document.getElementById('glink-low').href=googleUrl;
 
   const waTxt=encodeURIComponent(`Hi, I visited ${shopName} recently and had a bad experience I'd like to share.`);
   const waUrl=phone
@@ -405,18 +381,15 @@ function loadReview(shopName,shopCat,placeId,phone){
 function pickStar(val){
   rating=val;
   document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<val));
-
   if(val<=2){
     document.getElementById('sstars').style.opacity='0.4';
     document.getElementById('srev').classList.remove('show');
     document.getElementById('slow').classList.add('show');
     return;
   }
-
   document.getElementById('slow').classList.remove('show');
   document.getElementById('srev').classList.add('show');
   document.getElementById('sstars').style.opacity='1';
-
   const map={5:['Excellent! 🎉','b5'],4:['Great! 👍','b4'],3:['Okay 👌','b3']};
   const[txt,cls]=map[val]||['Thanks!','b3'];
   const b=document.getElementById('rbadge');
@@ -455,13 +428,13 @@ function getCatPool(name,cat,l,v,r){
            short:[`Decent food at {name}. Average experience overall.`]}
       },
       auto:{
-        5:{professional:[`{name} delivered an excellent automotive experience. Staff were knowledgeable, transparent about pricing, and genuinely helpful. Highly recommended in Kannur.`,`Outstanding service at {name}. Fair prices, expert advice, no pressure. The best automotive option around.`],
+        5:{professional:[`{name} delivered an excellent automotive experience. Staff were knowledgeable, transparent about pricing, and genuinely helpful. Highly recommended in Kannur.`,`Outstanding service at {name}. Fair prices, expert advice, no pressure. Best automotive option around.`],
            casual:[`Loved my experience at {name}! Honest pricing, really helpful staff, smooth from start to finish. 100% recommend!`],
            short:[`Excellent! {name} — honest pricing, helpful staff. Top choice in Kannur! ⭐⭐⭐⭐⭐`]},
         4:{professional:[`{name} provided good professional automotive service. Fair pricing and knowledgeable staff made the process straightforward.`],
            casual:[`Good experience at {name}. Helpful staff, fair prices, smooth process. Would recommend!`],
            short:[`Good service at {name}. Fair prices, helpful team. Recommend! 👍`]},
-        3:{professional:[`{name} offered a reasonable automotive experience. Adequate service with room for improvement in certain areas.`],
+        3:{professional:[`{name} offered a reasonable automotive experience. Adequate service with room for improvement.`],
            casual:[`{name} was okay. Decent, staff helpful enough. Average experience.`],
            short:[`Decent experience at {name}. Average overall.`]}
       },
@@ -478,8 +451,8 @@ function getCatPool(name,cat,l,v,r){
       },
       retail:{
         5:{professional:[`{name} offers an exceptional retail experience. Extensive selection, knowledgeable staff, fair pricing. My go-to shop in Kannur.`,`Thoroughly impressed by {name}. Great variety, excellent quality, very friendly service.`],
-           casual:[`Love shopping at {name}! Great selection, really helpful staff, prices that don't break the bank. Highly recommend!`],
-           short:[`Excellent shop! {name} — great selection, helpful staff, fair prices. Best in Kannur! ⭐⭐⭐⭐⭐`]},
+           casual:[`Love shopping at {name}! Great selection, really helpful staff, reasonable prices. Highly recommend!`],
+           short:[`Excellent shop! {name} — great selection, helpful staff. Best in Kannur! ⭐⭐⭐⭐⭐`]},
         4:{professional:[`{name} is a reliable retail option with good product selection and helpful staff. Fair pricing and a pleasant experience.`],
            casual:[`Happy with my shopping at {name}. Good variety, helpful team, fair prices. Would recommend!`],
            short:[`Good shop! {name} — nice selection, helpful staff. Recommend! 👍`]},
@@ -499,8 +472,8 @@ function getCatPool(name,cat,l,v,r){
            short:[`Decent service at {name}. Average experience.`]}
       },
       generic:{
-        5:{professional:[`I had an excellent experience at {name}. Service was outstanding, quality impressive, staff genuinely helpful and professional. Highly recommended in Kannur.`,`{name} exceeded all expectations. Every aspect was handled with professionalism and care. Five stars well deserved.`],
-           casual:[`Really loved my visit to {name}! Everything was great — friendly staff, good quality, fair prices. Will definitely be back!`,`{name} is amazing! One of the best experiences I've had in Kannur. Super friendly, great quality!`],
+        5:{professional:[`I had an excellent experience at {name}. Service was outstanding, quality impressive, staff genuinely helpful and professional. Highly recommended in Kannur.`,`{name} exceeded all expectations. Every aspect handled with professionalism and care. Five stars well deserved.`],
+           casual:[`Really loved my visit to {name}! Everything great — friendly staff, good quality, fair prices. Will definitely be back!`,`{name} is amazing! One of the best experiences in Kannur. Super friendly, great quality!`],
            short:[`Excellent experience at {name}. Great quality, friendly staff. Highly recommend! ⭐⭐⭐⭐⭐`]},
         4:{professional:[`I had a very positive experience at {name}. Quality was solid, staff were helpful, overall visit was pleasant. A trustworthy establishment.`],
            casual:[`Really happy with my visit to {name}! Good quality, helpful staff, good value. Definitely coming back!`],
@@ -525,7 +498,7 @@ function getCatPool(name,cat,l,v,r){
     }
   };
 
-  const lang_tree = T[l]||T['en'];
+  const lt=T[l]||T['en'];
   let type='generic';
   if(isFood)    type='food';
   else if(isAuto)    type='auto';
@@ -533,7 +506,7 @@ function getCatPool(name,cat,l,v,r){
   else if(isRetail)  type='retail';
   else if(isService) type='service';
 
-  const bucket=(lang_tree[type]||lang_tree['generic']);
+  const bucket=lt[type]||lt['generic'];
   const star=r<=3?3:r;
   const pool=bucket[star]?.[v]||bucket[star]?.['professional']||bucket[3]?.['professional']||[`Great experience at ${name}!`];
   return pool.map(t=>t.replace(/{name}/g,name));
@@ -556,15 +529,13 @@ function genReview(autoCopy){
 function pickVibe(v,btn){
   vibe=v;
   document.querySelectorAll('.vp').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  genReview(false);
+  btn.classList.add('on');genReview(false);
 }
 
 function pickLang(l,btn){
   lang=l;
   document.querySelectorAll('.lb').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  genReview(false);
+  btn.classList.add('on');genReview(false);
 }
 
 function doCopy(){
