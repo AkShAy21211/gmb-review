@@ -4,445 +4,395 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Leave a Review</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --gold: #F5A623;
-      --green: #00C566;
-      --red: #FF3B30;
-      --ink: #0d1117;
-      --ink2: #3a3f4b;
-      --ink3: #8a909f;
-      --surface: #ffffff;
-      --surface2: #f7f8fa;
-      --border: #e8ecf0;
+      --gold: #E8A020;
+      --gold-light: #FFF4E0;
+      --gold-glow: rgba(232,160,32,0.16);
+      --green: #1DB97A;
+      --green-light: #E6FBF2;
+      --red: #E5484D;
       --wa: #25D366;
+      --ink: #12110F;
+      --ink2: #3D3A36;
+      --ink3: #8C8680;
+      --ink4: #C2BDB7;
+      --surface: #FDFCFB;
+      --surface2: #F5F3F0;
+      --border: #EAE6E1;
+      --border2: #D6D1CB;
+      --shadow: rgba(18,17,15,0.07);
+      --shadow-md: rgba(18,17,15,0.13);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    html { -webkit-text-size-adjust: 100%; }
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--surface2);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 16px; position: relative;
     }
-
+    body::before {
+      content: '';
+      position: fixed; top: -15%; right: -15%;
+      width: 55vw; height: 55vw;
+      max-width: 480px; max-height: 480px;
+      background: radial-gradient(circle, rgba(232,160,32,0.09) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none; z-index: 0;
+    }
     .card {
       background: var(--surface);
-      border-radius: 28px;
-      padding: 36px 28px 32px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 8px 48px rgba(0,0,0,0.10);
+      border-radius: 24px;
+      max-width: 420px; width: 100%;
+      box-shadow: 0 1px 2px var(--shadow), 0 8px 32px var(--shadow-md), 0 0 0 1px var(--border);
       text-align: center;
-      animation: fadeUp 0.4s ease;
+      animation: riseIn 0.45s cubic-bezier(0.16,1,0.3,1);
+      position: relative; z-index: 1; overflow: hidden;
     }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
+    .card-stripe {
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold) 0%, #F5C842 50%, var(--gold) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+    .card-body { padding: 30px 26px 26px; }
+    @media (max-width: 380px) { .card-body { padding: 24px 18px 22px; } }
 
-    /* ── Loading state ── */
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid var(--border);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 20px auto;
+    /* LOADING */
+    #view-loading { padding: 12px 0 6px; }
+    .loading-ring { width: 40px; height: 40px; position: relative; margin: 0 auto 14px; }
+    .loading-ring::before {
+      content: ''; position: absolute; inset: 0;
+      border: 2.5px solid var(--border); border-top-color: var(--gold);
+      border-radius: 50%; animation: spin 0.75s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 13px; color: var(--ink3); font-weight: 500; }
 
-    /* ── Blocked state ── */
-    .blocked-icon { font-size: 56px; margin-bottom: 16px; }
-    .blocked-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 22px;
-      color: var(--ink);
-      margin-bottom: 8px;
+    /* STATUS */
+    .status-icon {
+      width: 68px; height: 68px; border-radius: 18px;
+      margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; font-size: 30px;
     }
-    .blocked-msg {
-      font-size: 14px;
-      color: var(--ink3);
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-    .btn-pay {
-      width: 100%;
-      padding: 15px;
-      border-radius: 14px;
-      border: none;
-      background: var(--gold);
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    .status-icon.paused  { background: #FFF4E0; }
+    .status-icon.invalid { background: #FFF0F0; }
+    .status-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: 23px; color: var(--ink); margin-bottom: 8px; }
+    .status-msg   { font-size: 14px; color: var(--ink3); line-height: 1.65; margin-bottom: 26px; }
+    .status-msg strong { color: var(--ink2); font-weight: 600; }
+
+    /* BUTTONS */
+    .btn {
+      width: 100%; padding: 14px 20px; border-radius: 13px; border: none;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 15px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
       text-decoration: none;
-      transition: all 0.2s;
-      margin-bottom: 10px;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      -webkit-tap-highlight-color: transparent; letter-spacing: 0.1px;
     }
-    .btn-pay:hover { background: #e09600; transform: translateY(-1px); }
-    .btn-wa-small {
-      width: 100%;
-      padding: 13px;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      background: transparent;
-      color: var(--ink2);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-wa-small:hover { border-color: var(--wa); color: var(--wa); }
+    .btn:active { transform: scale(0.975); }
+    .btn-primary { background: var(--gold); color: #fff; box-shadow: 0 2px 10px rgba(232,160,32,0.32); margin-bottom: 10px; }
+    .btn-primary:hover { background: #D4901A; transform: translateY(-1px); }
+    .btn-outline { background: var(--surface); color: var(--ink2); border: 1.5px solid var(--border2); box-shadow: 0 1px 3px var(--shadow); font-weight: 600; margin-bottom: 10px; }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .btn-wa { background: var(--wa); color: #fff; box-shadow: 0 2px 10px rgba(37,211,102,0.28); }
+    .btn-wa:hover { background: #20BD6B; transform: translateY(-1px); }
 
-    /* ── Review page ── */
-    .shop-logo {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--gold) 0%, #FF8C00 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 26px;
-      color: #fff;
-      margin: 0 auto 16px;
+    /* SHOP HEADER */
+    .shop-avatar {
+      width: 64px; height: 64px; border-radius: 17px;
+      background: linear-gradient(135deg, #F5C842 0%, var(--gold) 60%, #C8840E 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-weight: 700; font-size: 26px; color: #fff;
+      margin: 0 auto 13px; box-shadow: 0 4px 18px rgba(232,160,32,0.28);
     }
+    .shop-name { font-family: 'Fraunces', serif; font-weight: 700; font-size: 21px; color: var(--ink); margin-bottom: 4px; line-height: 1.2; }
+    .shop-cat  { font-size: 11px; font-weight: 700; color: var(--ink3); letter-spacing: 0.9px; text-transform: uppercase; margin-bottom: 26px; }
 
-    .shop-name {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 22px;
-      color: var(--ink);
-      margin-bottom: 4px;
-    }
-
-    .shop-cat {
-      font-size: 13px;
-      color: var(--ink3);
-      margin-bottom: 28px;
-    }
-
-    .question {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--ink2);
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-
-    .stars {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 28px;
-    }
-
+    /* STARS */
+    .stars-prompt { font-size: 15px; font-weight: 500; color: var(--ink2); margin-bottom: 18px; line-height: 1.5; }
+    .stars { display: flex; justify-content: center; gap: 6px; margin-bottom: 8px; }
     .star {
-      font-size: 44px;
-      cursor: pointer;
-      transition: transform 0.15s, filter 0.15s;
-      filter: grayscale(1) opacity(0.3);
-      user-select: none;
-      line-height: 1;
+      font-size: 42px; cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), filter 0.15s;
+      filter: grayscale(1) opacity(0.2); user-select: none; line-height: 1;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .star.active { filter: grayscale(0) opacity(1); transform: scale(1.2); }
+    .star:hover  { filter: grayscale(0.2) opacity(0.85); transform: scale(1.28); }
+
+    /* REVIEW SECTION */
+    .review-section { display: none; }
+    .review-section.visible { display: block; animation: fadeSlide 0.3s ease; }
+
+    .autocopy-toast {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      background: var(--green-light);
+      border: 1px solid rgba(29,185,122,0.25);
+      border-radius: 10px; padding: 9px 14px; margin-bottom: 14px;
+      font-size: 13px; font-weight: 600; color: #0A6E40;
+      animation: fadeSlide 0.3s ease;
     }
 
-    .star.active { filter: grayscale(0) opacity(1); transform: scale(1.15); }
-    .star:hover  { transform: scale(1.25); }
-
-    .review-section { display: none; animation: fadeUp 0.35s ease; }
-    .review-section.visible { display: block; }
-
-    .rating-label {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      padding: 5px 14px;
-      border-radius: 20px;
-      display: inline-block;
+    .rating-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 30px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 14px;
     }
+    .badge-5,.badge-4 { background: var(--green-light); color: #0A6E40; }
+    .badge-3          { background: var(--gold-light);  color: #8A5A00; }
 
-    .label-5, .label-4 { background: #e6fff2; color: #00874a; }
-    .label-3            { background: #fff4e0; color: #c06000; }
-    .label-2, .label-1  { background: #fff0ee; color: #c62828; }
-
-    .review-text {
-      background: var(--surface2);
-      border: 1.5px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 16px;
-      transition: border-color 0.2s;
+    /* VIBE PILLS */
+    .vibe-label { font-size: 11px; font-weight: 700; color: var(--ink3); letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 8px; }
+    .vibe-pills { display: flex; gap: 6px; margin-bottom: 14px; }
+    .vibe-pill {
+      flex: 1; padding: 8px 4px; border-radius: 10px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700; color: var(--ink3);
+      cursor: pointer; transition: all 0.18s;
+      -webkit-tap-highlight-color: transparent; line-height: 1.3;
     }
-    .review-text:focus-within { border-color: var(--gold); }
+    .vibe-pill .vi { display: block; font-size: 18px; margin-bottom: 3px; }
+    .vibe-pill.active { background: var(--gold-light); border-color: var(--gold); color: #8A5A00; }
+    .vibe-pill:hover:not(.active) { border-color: var(--border2); color: var(--ink2); }
 
-    #review-textarea {
-      width: 100%;
-      border: none;
-      background: transparent;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      color: var(--ink2);
-      resize: none;
-      outline: none;
-      min-height: 80px;
-      line-height: 1.65;
-    }
-
+    /* LANG SWITCH */
     .lang-switch {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 16px;
+      display: flex; gap: 5px; margin-bottom: 12px;
+      background: var(--surface2); padding: 3px; border-radius: 11px; border: 1px solid var(--border);
     }
-
     .lang-btn {
-      padding: 5px 16px;
-      border-radius: 20px;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink3);
-      cursor: pointer;
-      transition: all 0.15s;
-      font-family: 'DM Sans', sans-serif;
+      flex: 1; padding: 6px 10px; border-radius: 8px; border: none; background: transparent;
+      font-size: 12px; font-weight: 700; color: var(--ink3); cursor: pointer; transition: all 0.18s;
+      font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent;
     }
-    .lang-btn.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+    .lang-btn.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 5px var(--shadow); }
 
+    /* TEXTAREA */
+    .textarea-wrap {
+      background: var(--surface2); border: 1.5px solid var(--border);
+      border-radius: 13px; padding: 13px 14px; margin-bottom: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .textarea-wrap:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+    #review-textarea {
+      width: 100%; border: none; background: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; color: var(--ink2); resize: none; outline: none; min-height: 86px; line-height: 1.7;
+    }
+    #review-textarea::placeholder { color: var(--ink4); }
+
+    /* ACTION STRIP */
+    .action-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
     .btn-copy {
-      width: 100%;
-      padding: 15px;
-      border-radius: 14px;
-      border: none;
-      background: var(--gold);
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      padding: 13px 10px; border-radius: 12px; border: none;
+      background: var(--gold); color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.2s; box-shadow: 0 2px 8px rgba(232,160,32,0.28);
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn-copy:hover  { background: #e09600; transform: translateY(-1px); }
-    .btn-copy.copied { background: var(--green); }
-
+    .btn-copy:hover  { background: #D4901A; }
+    .btn-copy:active { transform: scale(0.975); }
+    .btn-copy.copied { background: var(--green); box-shadow: 0 2px 8px rgba(29,185,122,0.28); }
     .btn-google {
-      width: 100%;
-      padding: 15px;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      background: var(--surface);
-      color: var(--ink2);
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
+      padding: 13px 10px; border-radius: 12px;
+      border: 1.5px solid var(--border2); background: var(--surface); color: var(--ink2);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700; font-size: 14px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.2s; text-decoration: none; box-shadow: 0 1px 3px var(--shadow);
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn-google:hover { border-color: #4285F4; color: #4285F4; }
+    .btn-google:hover  { border-color: #4285F4; color: #4285F4; }
+    .btn-google:active { transform: scale(0.975); }
 
-    .helper-text {
-      font-size: 12px;
-      color: var(--ink3);
-      margin-top: 14px;
-      line-height: 1.6;
+    /* STEPS HINT */
+    .steps-hint { background: var(--surface2); border: 1px solid var(--border); border-radius: 11px; padding: 11px 13px; }
+    .steps-row  { display: flex; gap: 6px; flex-wrap: wrap; }
+    .step-chip  {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 7px; padding: 5px 8px;
+      font-size: 11px; font-weight: 600; color: var(--ink2); white-space: nowrap;
     }
-    .helper-text strong { color: var(--ink2); }
-
-    .low-rating-section { display: none; animation: fadeUp 0.35s ease; }
-    .low-rating-section.visible { display: block; }
-
-    .sorry-icon  { font-size: 48px; margin-bottom: 12px; }
-    .sorry-text  { font-size: 15px; color: var(--ink2); line-height: 1.6; margin-bottom: 20px; }
-
-    .btn-wa {
-      width: 100%;
-      padding: 15px;
-      border-radius: 14px;
-      border: none;
-      background: var(--wa);
-      color: #fff;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      transition: all 0.2s;
+    .step-num {
+      width: 15px; height: 15px; background: var(--gold); color: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; flex-shrink: 0;
     }
-    .btn-wa:hover { background: #128C7E; }
 
-    .powered { margin-top: 28px; font-size: 11px; color: var(--ink3); }
-    .powered a { color: var(--ink3); text-decoration: none; }
+    /* LOW RATING */
+    .low-rating-section { display: none; }
+    .low-rating-section.visible { display: block; animation: fadeSlide 0.3s ease; }
+    .low-icon  { font-size: 42px; margin-bottom: 12px; display: block; }
+    .low-title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 19px; color: var(--ink); margin-bottom: 8px; }
+    .low-msg   { font-size: 14px; color: var(--ink3); line-height: 1.65; margin-bottom: 20px; }
+    .low-note  { font-size: 11px; color: var(--ink4); margin-top: 10px; font-weight: 500; }
 
+    /* FOOTER */
+    .powered {
+      margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--border);
+      font-size: 11px; color: var(--ink4); font-weight: 500;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+    }
+    .powered a { color: var(--ink3); text-decoration: none; font-weight: 600; }
+    .powered a:hover { color: var(--gold); }
+    .powered-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink4); }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
-
 <div class="card">
+  <div class="card-stripe"></div>
+  <div class="card-body">
 
-  <!-- ── LOADING ── -->
-  <div id="view-loading">
-    <div class="loading-spinner"></div>
-    <p style="color:var(--ink3);font-size:13px;">Checking subscription...</p>
-  </div>
-
-  <!-- ── BLOCKED ── -->
-  <div id="view-blocked" class="hidden">
-    <div class="blocked-icon">⏸️</div>
-    <div class="blocked-title">Service Paused</div>
-    <div class="blocked-msg" id="blocked-msg">
-      The review page for this business is currently inactive.<br>
-      Please contact GMB AutoPilot to reactivate.
-    </div>
-    <a class="btn-pay" id="pay-link" href="#" target="_blank">
-      💳 Pay ₹499 to Reactivate
-    </a>
-    <a class="btn-wa-small" id="contact-wa" href="#" target="_blank">
-      💬 WhatsApp GMB AutoPilot
-    </a>
-  </div>
-
-  <!-- ── INVALID TOKEN ── -->
-  <div id="view-invalid" class="hidden">
-    <div class="blocked-icon">❌</div>
-    <div class="blocked-title">Invalid Link</div>
-    <div class="blocked-msg">
-      This review link is not recognised.<br>
-      Please ask the shop for their latest QR code.
-    </div>
-  </div>
-
-  <!-- ── REVIEW PAGE ── -->
-  <div id="view-review" class="hidden">
-    <div class="shop-logo" id="shop-initial">S</div>
-    <div class="shop-name" id="shop-name">Shop</div>
-    <div class="shop-cat"  id="shop-cat"></div>
-
-    <div id="step-stars">
-      <div class="question">How was your experience?<br>
-        <span style="font-size:13px;color:var(--ink3)">Tap a star to continue</span>
-      </div>
-      <div class="stars">
-        <span class="star" onclick="selectStar(1)">⭐</span>
-        <span class="star" onclick="selectStar(2)">⭐</span>
-        <span class="star" onclick="selectStar(3)">⭐</span>
-        <span class="star" onclick="selectStar(4)">⭐</span>
-        <span class="star" onclick="selectStar(5)">⭐</span>
-      </div>
+    <!-- LOADING -->
+    <div id="view-loading">
+      <div class="loading-ring"></div>
+      <p class="loading-text">Checking subscription…</p>
     </div>
 
-    <div class="review-section" id="step-review">
-      <div class="rating-label" id="rating-label">Excellent!</div>
-      <div class="lang-switch">
-        <button class="lang-btn active" onclick="switchLang('en',this)">English</button>
-        <button class="lang-btn"       onclick="switchLang('ml',this)">Malayalam</button>
-      </div>
-      <div class="review-text">
-        <textarea id="review-textarea" rows="4" spellcheck="false"></textarea>
-      </div>
-      <button class="btn-copy" id="copy-btn" onclick="copyReview()">📋 Copy Review</button>
-      <a class="btn-google" id="google-link" href="#" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        Open Google Review Page
+    <!-- BLOCKED -->
+    <div id="view-blocked" class="hidden">
+      <div class="status-icon paused">⏸️</div>
+      <div class="status-title">Service Paused</div>
+      <div class="status-msg" id="blocked-msg">The review page for this business is currently inactive.<br>Please contact GMB AutoPilot to reactivate.</div>
+      <a class="btn btn-primary" id="pay-link" href="#" target="_blank">💳 Pay ₹499 to Reactivate</a>
+      <a class="btn btn-outline"  id="contact-wa" href="#" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp GMB AutoPilot
       </a>
-      <p class="helper-text"><strong>How to post:</strong> Copy → Open Google → long press in review box → Paste → Submit ⭐</p>
     </div>
 
-    <div class="low-rating-section" id="step-low">
-      <div class="sorry-icon">🙏</div>
-      <div class="sorry-text">We're sorry your experience wasn't great.<br>Tell us what went wrong — we'll make it right.</div>
-      <a class="btn-wa" id="wa-complaint-link" href="#" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Tell Us What Went Wrong
-      </a>
-      <p class="helper-text" style="margin-top:12px">Your feedback goes directly to the owner — not on Google.</p>
+    <!-- INVALID -->
+    <div id="view-invalid" class="hidden">
+      <div class="status-icon invalid">❌</div>
+      <div class="status-title">Invalid Link</div>
+      <div class="status-msg">This review link isn't recognised.<br>Please ask the shop for their latest QR code.</div>
     </div>
 
-    <div class="powered">Powered by <a href="#">GMB AutoPilot</a> · Kannur</div>
+    <!-- REVIEW PAGE -->
+    <div id="view-review" class="hidden">
+      <div class="shop-avatar" id="shop-initial">S</div>
+      <div class="shop-name"   id="shop-name">Shop</div>
+      <div class="shop-cat"    id="shop-cat"></div>
+
+      <!-- Stars -->
+      <div id="step-stars">
+        <div class="stars-prompt">How was your experience?</div>
+        <div class="stars">
+          <span class="star" onclick="selectStar(1)">⭐</span>
+          <span class="star" onclick="selectStar(2)">⭐</span>
+          <span class="star" onclick="selectStar(3)">⭐</span>
+          <span class="star" onclick="selectStar(4)">⭐</span>
+          <span class="star" onclick="selectStar(5)">⭐</span>
+        </div>
+      </div>
+
+      <!-- Review writer (3★–5★) -->
+      <div class="review-section" id="step-review">
+        <div class="autocopy-toast" id="autocopy-toast" style="display:none">
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#1DB97A" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#1DB97A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Review copied! Just open Google and paste.
+        </div>
+
+        <div class="rating-badge" id="rating-label">Excellent!</div>
+
+        <div class="vibe-label">Choose your style</div>
+        <div class="vibe-pills">
+          <button class="vibe-pill active" onclick="selectVibe('professional',this)"><span class="vi">🎯</span>Professional</button>
+          <button class="vibe-pill"        onclick="selectVibe('casual',this)"><span class="vi">😊</span>Casual</button>
+          <button class="vibe-pill"        onclick="selectVibe('short',this)"><span class="vi">⚡</span>Short</button>
+        </div>
+
+        <div class="lang-switch">
+          <button class="lang-btn active" onclick="switchLang('en',this)">English</button>
+          <button class="lang-btn"        onclick="switchLang('ml',this)">മലയാളം</button>
+        </div>
+
+        <div class="textarea-wrap">
+          <textarea id="review-textarea" rows="4" spellcheck="false" placeholder="Your review…"></textarea>
+        </div>
+
+        <div class="action-strip">
+          <button class="btn-copy" id="copy-btn" onclick="copyReview()">📋 Copy</button>
+          <a class="btn-google" id="google-link" href="#" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Open Google
+          </a>
+        </div>
+
+        <div class="steps-hint">
+          <div class="steps-row">
+            <div class="step-chip"><span class="step-num">1</span>Auto-copied ✓</div>
+            <div class="step-chip"><span class="step-num">2</span>Open Google</div>
+            <div class="step-chip"><span class="step-num">3</span>Long-press → Paste</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Low rating → private feedback -->
+      <div class="low-rating-section" id="step-low">
+        <span class="low-icon">🙏</span>
+        <div class="low-title">We're sorry to hear that</div>
+        <div class="low-msg">Tell us what went wrong — your feedback goes directly to the owner, not on Google.</div>
+        <a class="btn btn-wa" id="wa-complaint-link" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Tell Us What Went Wrong
+        </a>
+        <p class="low-note">Your message goes directly to the owner — not public.</p>
+      </div>
+
+      <div class="powered">
+        Powered by <a href="#">GMB AutoPilot</a>
+        <span class="powered-dot"></span>Kannur
+      </div>
+    </div>
+
   </div>
-
 </div>
 
 <script>
-  // ════════════════════════════════════════════════════
-  // CONFIGURATION — change these two lines only
-  // ════════════════════════════════════════════════════
-
-  // 1. Your Google Sheet published CSV URL
-  //    (Instructions below on how to get this)
   const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQu2IHRZK2ItfeTDoCu0jLltm8-mc_td_PgRiwgQwl-WHrH0hYk1pO8Hkx6m3jSXg/pub?gid=1658064660&single=true&output=csv';
-
-  // 2. Your own WhatsApp number (for clients to contact you)
   const YOUR_WHATSAPP = '9074592275';
-
-  // ════════════════════════════════════════════════════
 
   const params      = new URLSearchParams(window.location.search);
   const token       = params.get('token') || '';
   const razorpayUrl = params.get('pay')   || '#';
 
-  // Show view helper
   function show(id) {
     ['view-loading','view-blocked','view-invalid','view-review']
       .forEach(v => document.getElementById(v).classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
   }
 
-  // ── Fetch Google Sheet and check token ──
   async function checkAccess() {
     if (!token) { show('view-invalid'); return; }
-
     try {
-      const res  = await fetch(SHEET_CSV_URL + '&t=' + Date.now()); // bust cache
+      const res  = await fetch(SHEET_CSV_URL + '&t=' + Date.now());
       const text = await res.text();
-      const rows = text.trim().split('\n').slice(1); // skip header row
-
+      const rows = text.trim().split('\n').slice(1);
       let found = false;
       for (const row of rows) {
-        // CSV columns: token, shop_name, category, place_id, phone, status, pay_link
         const cols = parseCSVRow(row);
         if (!cols[0]) continue;
         if (cols[0].trim() === token.trim()) {
@@ -453,49 +403,34 @@
           const placeId  = (cols[3] || '').trim();
           const phone    = (cols[4] || '').trim();
           const payLink  = (cols[6] || razorpayUrl).trim();
-
-          if (status === 'active') {
-            loadReviewPage(shopName, shopCat, placeId, phone);
-          } else {
-            loadBlockedPage(shopName, payLink);
-          }
+          status === 'active'
+            ? loadReviewPage(shopName, shopCat, placeId, phone)
+            : loadBlockedPage(shopName, payLink);
           break;
         }
       }
-
       if (!found) show('view-invalid');
-
     } catch (e) {
-      // If sheet fetch fails — fail open (show review page with URL params as fallback)
-      // so a network hiccup doesn't block paying clients
-      const fallbackName = params.get('name') || 'Shop';
-      const fallbackCat  = params.get('cat')  || '';
-      const fallbackPid  = params.get('pid')  || '';
-      const fallbackPhone= params.get('phone')|| '';
-      if (fallbackName !== 'Shop') {
-        loadReviewPage(fallbackName, fallbackCat, fallbackPid, fallbackPhone);
-      } else {
-        show('view-invalid');
-      }
+      const fn = params.get('name') || 'Shop';
+      fn !== 'Shop'
+        ? loadReviewPage(fn, params.get('cat')||'', params.get('pid')||'', params.get('phone')||'')
+        : show('view-invalid');
     }
   }
 
   function parseCSVRow(row) {
-    const result = [];
-    let cur = '', inQ = false;
+    const result = []; let cur = '', inQ = false;
     for (let i = 0; i < row.length; i++) {
       if (row[i] === '"') { inQ = !inQ; continue; }
       if (row[i] === ',' && !inQ) { result.push(cur); cur = ''; continue; }
       cur += row[i];
     }
-    result.push(cur);
-    return result;
+    result.push(cur); return result;
   }
 
   function loadBlockedPage(shopName, payLink) {
     document.getElementById('blocked-msg').innerHTML =
-      `The review page for <strong>${shopName}</strong> is currently paused.<br>
-       Please renew your GMB AutoPilot subscription to reactivate.`;
+      `The review page for <strong>${shopName}</strong> is currently paused.<br>Please renew your GMB AutoPilot subscription to reactivate.`;
     document.getElementById('pay-link').href = payLink;
     document.getElementById('contact-wa').href =
       `https://wa.me/${YOUR_WHATSAPP}?text=${encodeURIComponent(`Hi, I'd like to reactivate GMB AutoPilot for ${shopName}`)}`;
@@ -506,160 +441,148 @@
     document.getElementById('shop-initial').textContent = shopName.charAt(0).toUpperCase();
     document.getElementById('shop-name').textContent    = shopName;
     document.getElementById('shop-cat').textContent     = shopCat;
-
     const googleUrl = placeId
       ? `https://search.google.com/local/writereview?placeid=${placeId}`
       : `https://www.google.com/maps/search/${encodeURIComponent(shopName)}`;
     document.getElementById('google-link').href = googleUrl;
-
     const waUrl = phone
       ? `https://wa.me/91${phone.replace(/\D/,'')}?text=${encodeURIComponent(`Hi, I visited ${shopName} recently and had an issue I'd like to share.`)}`
       : `https://wa.me/${YOUR_WHATSAPP}`;
     document.getElementById('wa-complaint-link').href = waUrl;
-
-    // Store for review generation
-    window._shopName = shopName;
-    window._shopCat  = shopCat;
-
+    window._shopName = shopName; window._shopCat = shopCat;
     show('view-review');
   }
 
-  // ── Review templates ──
-  const templates = {
+  // ── Templates: 3 vibes × 3 ratings × 2 langs ──
+  const T = {
     en: {
-      5: [
-        `Really happy with my visit to {name}. The service was excellent and everything was exactly as expected. Will definitely come back and recommend to friends.`,
-        `Great experience at {name}. Clean, friendly staff, and good quality. One of the better places in Kannur. Highly recommend.`,
-        `{name} delivered on every front. Quick service, good atmosphere, reasonable prices. Five stars well earned.`
-      ],
-      4: [
-        `Good experience overall at {name}. Staff were helpful and the quality was solid. Would visit again.`,
-        `Happy with my visit to {name}. Good service and decent quality. Worth trying if you're in the area.`,
-        `{name} is a reliable choice in Kannur. Good value for money and friendly service.`
-      ],
-      3: [
-        `Decent visit to {name}. Some things were good, a few things could be improved. Average experience overall but nothing particularly bad.`,
-        `{name} is okay. Not the best I've had but not bad either. Service was fine, quality was acceptable.`
-      ]
+      professional: {
+        5:[`I recently visited {name} and was thoroughly impressed by the level of service and quality. The staff were professional and attentive, and the experience exceeded my expectations. I would highly recommend this establishment to anyone in the Kannur area.`,
+           `{name} demonstrated excellent standards across every aspect of my visit. The quality was outstanding, the atmosphere was welcoming, and the team went above and beyond. Five stars are well deserved.`,
+           `My experience at {name} was exceptional in every regard. Service was prompt, professional, and genuinely helpful. An excellent choice for anyone seeking quality in Kannur.`],
+        4:[`I had a very positive experience at {name}. The service was attentive and the quality was solid throughout. A reliable and professional establishment I would confidently recommend.`,
+           `{name} provided a good overall experience — staff were helpful, quality was commendable, and the visit was smooth. A trustworthy option for the local community.`,
+           `My visit to {name} was largely positive. The team was professional and quality met expectations. Worth considering for anyone looking for dependable service in Kannur.`],
+        3:[`My visit to {name} was satisfactory overall. There were aspects handled well, though there is room for improvement in certain areas. A reasonable option for the area.`,
+           `{name} offers an acceptable level of service. My experience was adequate — not exceptional, but functional. With some improvements, this could be a strong contender locally.`]
+      },
+      casual: {
+        5:[`Honestly loved my visit to {name}! Everything was spot on — great service, friendly people, and really good quality. Definitely going back and recommending it to everyone in Kannur!`,
+           `{name} was amazing! The staff were so welcoming and everything was just right. One of my favourite spots in Kannur now. If you haven't tried it yet, you're missing out!`,
+           `Had such a great time at {name}. Super friendly vibe, really good stuff, and fair prices. Exactly what you want from a local place. 100% coming back!`],
+        4:[`Really happy with my visit to {name}! Good quality, nice staff, and a comfortable experience overall. Would definitely come back and recommend it to friends in Kannur.`,
+           `{name} was a good experience! The team was helpful and quality was solid. Nothing to complain about — a solid choice if you're in the area.`,
+           `Pretty satisfied with {name}. Good value, friendly service, pleasant atmosphere. One of the decent spots around Kannur for sure.`],
+        3:[`{name} was okay for what it is. Some things were good and some could be better. Not bad overall — might give it another shot next time.`,
+           `Had an average experience at {name}. Nothing stood out as amazing but nothing was terrible either. Could definitely be better with a few tweaks.`]
+      },
+      short: {
+        5:[`Excellent experience at {name}. Great service, top quality. Highly recommend! ⭐⭐⭐⭐⭐`,
+           `{name} is brilliant — friendly staff, great quality, fair price. Best in Kannur! 🌟`,
+           `Loved it! {name} nailed everything. Will definitely be back. 👍`],
+        4:[`Good visit to {name}. Helpful staff and solid quality. Would recommend! 👍`,
+           `Happy with {name}. Good service, good value. Worth a visit! ✅`,
+           `{name} — reliable, good quality, friendly team. 4 stars, would return!`],
+        3:[`Decent experience at {name}. Some things good, some could improve. Average overall.`,
+           `{name} is okay. Nothing special but nothing bad. Room to grow.`]
+      }
     },
     ml: {
-      5: [
-        `{name}-ൽ visit ചെയ്തതിൽ വളരെ സന്തോഷം. Service excellent ആയിരുന്നു. Kannur-ൽ ഉള്ളവർക്ക് strongly recommend ചെയ്യുന്നു. തീർച്ചയായും വീണ്ടും വരും.`,
-        `{name}-ൽ നല്ല experience ആയിരുന്നു. Staff friendly ആണ്, place clean ആണ്. Five stars deserve ചെയ്യുന്നു.`,
-        `{name} Kannur-ൽ ഉള്ള best options-ൽ ഒന്നാണ്. Quick service, good quality, reasonable price. Highly recommend.`
-      ],
-      4: [
-        `{name}-ൽ overall good experience ആയിരുന്നു. Service helpful ആണ്, quality decent ആണ്. വീണ്ടും visit ചെയ്യും.`,
-        `{name} try ചെയ്തത് നല്ലതായി. Good value for money, friendly staff. Recommend ചെയ്യും.`,
-        `{name}-ൽ happy ആണ്. Reliable choice in Kannur. Service good, quality acceptable.`
-      ],
-      3: [
-        `{name}-ൽ okay ആയ experience. ചില കാര്യങ്ങൾ നല്ലതായിരുന്നു, ചിലത് improve ചെയ്യാം. Average ആണ്.`,
-        `{name} decent ആണ്. Service okay, quality average. Better ആകാൻ scope ഉണ്ട്.`
-      ]
+      professional: {
+        5:[`{name}-ൽ ചെന്നത് വളരെ നല്ല experience ആയിരുന്നു. Service professional ആയിരുന്നു, quality excellent ആയിരുന്നു. Kannur-ലുള്ള ആർക്കും strongly recommend ചെയ്യുന്നു.`,
+           `{name}-ന്റെ service standards ഏറ്റവും ഉയർന്ന നിലവാരത്തിൽ ആണ്. Staff attentive ആണ്, quality outstanding ആണ്. Five stars deserve ചെയ്യുന്ന establishment.`,
+           `{name}-ൽ exceptional experience ആണ് ലഭിച്ചത്. Professional service, excellent quality, welcoming atmosphere. Kannur-ൽ best choice ആണ്.`],
+        4:[`{name}-ൽ very positive experience ആണ് ഉണ്ടായത്. Staff helpful ആണ്, quality commendable ആണ്. Reliable establishment — recommend ചെയ്യാം.`,
+           `{name} good overall experience provide ചെയ്തു. Quality met expectations, service attentive ആണ്. Kannur-ൽ trustworthy option ആണ്.`,
+           `{name}-ൽ visit ചെയ്തത് largely positive ആണ്. Professional team, dependable service. Four stars.`],
+        3:[`{name}-ൽ satisfactory experience ആണ്. ചില aspects നന്നായിരുന്നു, improvement വേണ്ട areas ഉണ്ട്. Reasonable option.`,
+           `{name} acceptable service offer ചെയ്യുന്നു. Average experience — improvement ഉണ്ടായാൽ better ആകും.`]
+      },
+      casual: {
+        5:[`{name}-ൽ visit ചെയ്തതിൽ വളരെ സന്തോഷം! Service super ആണ്, staff friendly ആണ്, quality really good ആണ്. Kannur-ൽ must-try ആണ്! വീണ്ടും വരും.`,
+           `{name} amazing ആണ്! Friendly vibe, great quality, fair price. Kannur-ൽ ഇഷ്ടപ്പെട്ട places-ൽ ഒന്ന്. Highly recommend!`,
+           `{name}-ൽ super experience! Staff welcoming ആണ്, everything was just right. Must visit!`],
+        4:[`{name}-ൽ really happy! Good quality, nice staff, comfortable visit. Friends-നോട് recommend ചെയ്യും.`,
+           `{name} good experience ആണ്! Helpful team, solid quality. Kannur-ൽ solid choice!`,
+           `{name}-ൽ satisfied. Good value, friendly service. Decent spot in Kannur!`],
+        3:[`{name} okay ആണ്. ചിലത് good ആണ്, ചിലത് improve ആകാം. Not bad overall.`,
+           `{name}-ൽ average experience. Nothing amazing, nothing terrible. Could be better.`]
+      },
+      short: {
+        5:[`{name}-ൽ excellent experience. Great service, top quality. Highly recommend! ⭐⭐⭐⭐⭐`,
+           `{name} brilliant ആണ് — friendly staff, great quality. Kannur-ൽ best! 🌟`,
+           `{name} nailed everything. Definitely coming back! 👍`],
+        4:[`{name}-ൽ good visit. Helpful staff, solid quality. Recommend! 👍`,
+           `{name} — good service, good value. Worth a visit! ✅`,
+           `{name} reliable, friendly, good quality. 4 stars!`],
+        3:[`{name}-ൽ decent. ചിലത് good, ചിലത് improve ആകാം.`,
+           `{name} okay ആണ്. Average — room to improve.`]
+      }
     }
   };
 
-  let currentRating = 0;
-  let currentLang   = 'en';
+  let currentRating = 0, currentLang = 'en', currentVibe = 'professional';
 
   function selectStar(val) {
     currentRating = val;
-    document.querySelectorAll('.star').forEach((s, i) => {
-      s.classList.toggle('active', i < val);
-    });
-
+    document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < val));
     if (val <= 2) {
       document.getElementById('step-stars').style.opacity = '0.4';
       document.getElementById('step-review').classList.remove('visible');
       document.getElementById('step-low').classList.add('visible');
       return;
     }
-
     document.getElementById('step-low').classList.remove('visible');
     document.getElementById('step-review').classList.add('visible');
     document.getElementById('step-stars').style.opacity = '1';
-
-    const labels = { 5: ['Excellent! 🎉','label-5'], 4: ['Great! 👍','label-4'], 3: ['Okay 👌','label-3'] };
-    const [text, cls] = labels[val] || ['Thanks!','label-3'];
+    const labels = { 5:['Excellent! 🎉','badge-5'], 4:['Great! 👍','badge-4'], 3:['Okay 👌','badge-3'] };
+    const [text, cls] = labels[val] || ['Thanks!','badge-3'];
     const lbl = document.getElementById('rating-label');
-    lbl.textContent = text;
-    lbl.className   = `rating-label ${cls}`;
-
-    generateReview();
+    lbl.textContent = text; lbl.className = `rating-badge ${cls}`;
+    generateReview(true);
   }
 
-  function generateReview() {
+  function generateReview(autoCopy) {
     if (!currentRating || currentRating <= 2) return;
     const name = window._shopName || 'this shop';
-    const pool = templates[currentLang][currentRating] || templates[currentLang][3];
-    const idx  = Math.floor(Math.random() * pool.length);
-    document.getElementById('review-textarea').value = pool[idx].replace(/{name}/g, name);
+    const pool = T[currentLang]?.[currentVibe]?.[currentRating]
+              || T[currentLang]?.[currentVibe]?.[3]
+              || T.en.professional[3];
+    const text = pool[Math.floor(Math.random() * pool.length)].replace(/{name}/g, name);
+    document.getElementById('review-textarea').value = text;
+    if (autoCopy) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('autocopy-toast');
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, 4000);
+      }).catch(() => {});
+    }
+  }
+
+  function selectVibe(vibe, btn) {
+    currentVibe = vibe;
+    document.querySelectorAll('.vibe-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    generateReview(false);
   }
 
   function switchLang(lang, btn) {
     currentLang = lang;
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    generateReview();
+    generateReview(false);
   }
 
   function copyReview() {
     const text = document.getElementById('review-textarea').value;
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.getElementById('copy-btn');
-      btn.textContent = '✓ Copied!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.innerHTML = '📋 Copy Review';
-        btn.classList.remove('copied');
-      }, 2500);
-    }).catch(() => {
-      const ta = document.getElementById('review-textarea');
-      ta.select();
-      document.execCommand('copy');
-    });
+      btn.innerHTML = '✓ Copied!'; btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = '📋 Copy'; btn.classList.remove('copied'); }, 2500);
+    }).catch(() => { document.getElementById('review-textarea').select(); document.execCommand('copy'); });
   }
 
-  // ── Start ──
   checkAccess();
 </script>
-
-<!--
-════════════════════════════════════════════════════════
-HOW TO SET UP YOUR GOOGLE SHEET
-════════════════════════════════════════════════════════
-
-1. Create a new Google Sheet
-2. Add these exact headers in Row 1:
-   token | shop_name | category | place_id | phone | status | pay_link
-
-3. Add one row per client. Example:
-   sk8j2x | SHAJEE CARS | Used Car Dealer | ChIJabc123 | 9446564594 | active | https://razorpay.com/...
-   kp9m3z | Kannur Bakery | Bakery | ChIJdef456 | 9876543210 | paused | https://razorpay.com/...
-
-4. Status values:
-   active  → review page works normally
-   paused  → blocked screen with payment link shown
-
-5. Publish the sheet as CSV:
-   File → Share → Publish to web
-   Select: Sheet1 → Comma-separated values (.csv)
-   Click Publish → Copy the URL
-   Paste that URL into SHEET_CSV_URL at the top of this file
-
-6. Each client's QR URL format:
-   https://YOURUSERNAME.github.io/gmb-review/?token=sk8j2x
-
-7. To block a client who hasn't paid:
-   Open Google Sheet → change their status from "active" to "paused"
-   Takes effect within 1 minute. QR code stays the same — no reprint needed.
-
-8. To unblock after payment:
-   Change status back to "active" → works immediately.
-
-════════════════════════════════════════════════════════
--->
-
 </body>
 </html>
