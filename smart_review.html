@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Leave a Review</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #F5A623;
+      --gold-light: #FFF3DC;
+      --green: #00C566;
+      --red: #FF3B30;
+      --ink: #0d1117;
+      --ink2: #3a3f4b;
+      --ink3: #8a909f;
+      --surface: #ffffff;
+      --surface2: #f7f8fa;
+      --border: #e8ecf0;
+      --radius: 18px;
+      --wa: #25D366;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface2);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 28px;
+      padding: 36px 28px 32px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.10);
+      text-align: center;
+      animation: fadeUp 0.4s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .shop-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--gold) 0%, #FF8C00 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 26px;
+      color: #fff;
+      margin: 0 auto 16px;
+      letter-spacing: -1px;
+    }
+
+    .shop-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .shop-cat {
+      font-size: 13px;
+      color: var(--ink3);
+      margin-bottom: 28px;
+    }
+
+    .question {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink2);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* ── Stars ── */
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .star {
+      font-size: 44px;
+      cursor: pointer;
+      transition: transform 0.15s, filter 0.15s;
+      filter: grayscale(1) opacity(0.3);
+      user-select: none;
+      line-height: 1;
+    }
+
+    .star.active {
+      filter: grayscale(0) opacity(1);
+      transform: scale(1.15);
+    }
+
+    .star:hover { transform: scale(1.25); }
+
+    /* ── Review box ── */
+    .review-section {
+      display: none;
+      animation: fadeUp 0.35s ease;
+    }
+
+    .review-section.visible { display: block; }
+
+    .rating-label {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .label-5 { background: #e6fff2; color: #00874a; }
+    .label-4 { background: #e6fff2; color: #00874a; }
+    .label-3 { background: #fff4e0; color: #c06000; }
+    .label-2 { background: #fff0ee; color: #c62828; }
+    .label-1 { background: #fff0ee; color: #c62828; }
+
+    .review-text {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink2);
+      text-align: left;
+      min-height: 100px;
+      margin-bottom: 16px;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .review-text:focus-within { border-color: var(--gold); }
+
+    #review-textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--ink2);
+      resize: none;
+      outline: none;
+      min-height: 80px;
+      line-height: 1.65;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .lang-btn {
+      padding: 5px 16px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink3);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .lang-btn.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff;
+    }
+
+    .btn-copy {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      border: none;
+      background: var(--gold);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-copy:hover { background: #e09600; transform: translateY(-1px); }
+    .btn-copy.copied { background: var(--green); }
+
+    .btn-google {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--ink2);
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-google:hover { border-color: #4285F4; color: #4285F4; }
+
+    .helper-text {
+      font-size: 12px;
+      color: var(--ink3);
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .helper-text strong { color: var(--ink2); }
+
+    /* Low rating — show WhatsApp instead */
+    .low-rating-section {
+      display: none;
+      animation: fadeUp 0.35s ease;
+    }
+
+    .low-rating-section.visible { display: block; }
+
+    .sorry-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .sorry-text {
+      font-size: 15px;
+      color: var(--ink2);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .btn-wa {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      border: none;
+      background: var(--wa);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-wa:hover { background: #128C7E; }
+
+    .powered {
+      margin-top: 28px;
+      font-size: 11px;
+      color: var(--ink3);
+    }
+
+    .powered a { color: var(--ink3); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="shop-logo" id="shop-initial">S</div>
+  <div class="shop-name" id="shop-name">Loading...</div>
+  <div class="shop-cat" id="shop-cat"></div>
+
+  <!-- Step 1: Stars -->
+  <div id="step-stars">
+    <div class="question" id="question-text">How was your experience?<br><span style="font-size:13px;color:var(--ink3)">Tap a star to continue</span></div>
+    <div class="stars" id="stars">
+      <span class="star" data-val="1" onclick="selectStar(1)">⭐</span>
+      <span class="star" data-val="2" onclick="selectStar(2)">⭐</span>
+      <span class="star" data-val="3" onclick="selectStar(3)">⭐</span>
+      <span class="star" data-val="4" onclick="selectStar(4)">⭐</span>
+      <span class="star" data-val="5" onclick="selectStar(5)">⭐</span>
+    </div>
+  </div>
+
+  <!-- Step 2a: Good rating (3-5) — review text + copy + open Google -->
+  <div class="review-section" id="step-review">
+    <div class="rating-label" id="rating-label">Excellent!</div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="switchLang('en', this)">English</button>
+      <button class="lang-btn" onclick="switchLang('ml', this)">Malayalam</button>
+    </div>
+    <div class="review-text">
+      <textarea id="review-textarea" rows="4" spellcheck="false"></textarea>
+    </div>
+    <button class="btn-copy" id="copy-btn" onclick="copyReview()">
+      📋 Copy Review
+    </button>
+    <a class="btn-google" id="google-link" href="#" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Open Google Review Page
+    </a>
+    <p class="helper-text"><strong>How to post:</strong> Tap Copy → tap Open Google → long press in the review box → Paste → Submit ⭐</p>
+  </div>
+
+  <!-- Step 2b: Low rating (1-2) — redirect to WhatsApp complaint -->
+  <div class="low-rating-section" id="step-low">
+    <div class="sorry-icon">🙏</div>
+    <div class="sorry-text">
+      We're sorry your experience wasn't great.<br>
+      Please tell us what went wrong — we'll make it right.
+    </div>
+    <a class="btn-wa" id="wa-complaint-link" href="#" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Tell Us What Went Wrong
+    </a>
+    <p class="helper-text" style="margin-top:12px">Your feedback goes directly to the owner — not on Google.</p>
+  </div>
+
+  <div class="powered">Powered by <a href="#">GMB AutoPilot</a> · Kannur</div>
+</div>
+
+<script>
+  // ── Read URL params ──
+  const params = new URLSearchParams(window.location.search);
+  const shopName    = params.get('name')     || 'Your Shop';
+  const shopCat     = params.get('cat')      || 'Local Business';
+  const placeId     = params.get('pid')      || '';
+  const ownerPhone  = params.get('phone')    || '';
+
+  // ── Populate header ──
+  document.getElementById('shop-name').textContent = shopName;
+  document.getElementById('shop-cat').textContent  = shopCat;
+  document.getElementById('shop-initial').textContent = shopName.charAt(0).toUpperCase();
+
+  // Google review link
+  const googleReviewUrl = placeId
+    ? `https://search.google.com/local/writereview?placeid=${placeId}`
+    : `https://www.google.com/maps/search/${encodeURIComponent(shopName)}`;
+  document.getElementById('google-link').href = googleReviewUrl;
+
+  // WhatsApp complaint link
+  const waUrl = ownerPhone
+    ? `https://wa.me/91${ownerPhone.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi, I visited ${shopName} recently and had an issue I'd like to share.`)}`
+    : '#';
+  document.getElementById('wa-complaint-link').href = waUrl;
+
+  // ── Review templates ──
+  // category-specific, rating-specific, sounds human not robotic
+  const templates = {
+    en: {
+      5: [
+        `Really happy with my visit to ${shopName}. The service was excellent and everything was exactly as expected. Will definitely come back and recommend to friends.`,
+        `Great experience at ${shopName}. Clean, friendly staff, and good quality. One of the better places I've visited in Kannur. Highly recommend.`,
+        `${shopName} delivered on every front. Quick service, good atmosphere, and reasonable prices. Five stars well earned.`
+      ],
+      4: [
+        `Good experience overall at ${shopName}. Staff were helpful and the quality was solid. A couple of small things could be better but nothing major. Would visit again.`,
+        `Happy with my visit to ${shopName}. Good service and decent quality. Worth trying if you're in the area.`,
+        `${shopName} is a reliable choice in Kannur. Good value for money and friendly service. Will return.`
+      ],
+      3: [
+        `Decent visit to ${shopName}. Some things were good, a few things could be improved. Average experience overall but nothing particularly bad.`,
+        `${shopName} is okay. Not the best I've had but not bad either. Service was fine, quality was acceptable.`
+      ]
+    },
+    ml: {
+      5: [
+        `${shopName}-ൽ visit ചെയ്തതിൽ വളരെ സന്തോഷം. Service excellent ആയിരുന്നു, quality-ഉം നല്ലതായിരുന്നു. Kannur-ൽ ഉള്ളവർക്ക് strongly recommend ചെയ്യുന്നു. തീർച്ചയായും വീണ്ടും വരും.`,
+        `${shopName}-ൽ നല്ല experience ആയിരുന്നു. Staff friendly ആണ്, place clean ആണ്, quality-ഉം satisfied ആണ്. Five stars deserve ചെയ്യുന്നു.`,
+        `${shopName} Kannur-ൽ ഉള്ള best options-ൽ ഒന്നാണ്. Quick service, good quality, reasonable price. Highly recommend.`
+      ],
+      4: [
+        `${shopName}-ൽ overall good experience ആയിരുന്നു. Service helpful ആണ്, quality decent ആണ്. ചില ചെറിയ improvements ഉണ്ടാകാം, പക്ഷേ generally satisfied. വീണ്ടും visit ചെയ്യും.`,
+        `${shopName} try ചെയ്തത് നല്ലതായി. Good value for money, friendly staff. Kannur-ൽ ഉള്ളവർക്ക് recommend ചെയ്യും.`,
+        `${shopName}-ൽ happy ആണ്. Reliable choice in Kannur. Service good, quality acceptable.`
+      ],
+      3: [
+        `${shopName}-ൽ okay ആയ experience. ചില കാര്യങ്ങൾ നല്ലതായിരുന്നു, ചിലത് improve ചെയ്യാം. Average ആണ്, bad ഇല്ല.`,
+        `${shopName} decent ആണ്. Service okay, quality average. Better ആകാൻ scope ഉണ്ട്.`
+      ]
+    }
+  };
+
+  let currentRating  = 0;
+  let currentLang    = 'en';
+  let currentReview  = '';
+
+  function selectStar(val) {
+    currentRating = val;
+
+    // Highlight stars
+    document.querySelectorAll('.star').forEach((s, i) => {
+      s.classList.toggle('active', i < val);
+    });
+
+    // Low rating → complaint flow
+    if (val <= 2) {
+      document.getElementById('step-stars').style.opacity = '0.4';
+      document.getElementById('step-review').classList.remove('visible');
+      document.getElementById('step-low').classList.add('visible');
+      return;
+    }
+
+    // Good rating → review flow
+    document.getElementById('step-low').classList.remove('visible');
+    document.getElementById('step-review').classList.add('visible');
+    document.getElementById('step-stars').style.opacity = '1';
+
+    // Rating label
+    const labels = { 5: ['Excellent! 🎉', 'label-5'], 4: ['Great! 👍', 'label-4'], 3: ['Okay 👌', 'label-3'] };
+    const [text, cls] = labels[val] || ['Thanks!', 'label-3'];
+    const lbl = document.getElementById('rating-label');
+    lbl.textContent = text;
+    lbl.className = `rating-label ${cls}`;
+
+    generateReview();
+  }
+
+  function generateReview() {
+    if (!currentRating || currentRating <= 2) return;
+    const pool = templates[currentLang][currentRating] || templates[currentLang][3];
+    const idx = Math.floor(Math.random() * pool.length);
+    currentReview = pool[idx];
+    document.getElementById('review-textarea').value = currentReview;
+  }
+
+  function switchLang(lang, btn) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    generateReview();
+  }
+
+  function copyReview() {
+    const text = document.getElementById('review-textarea').value;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.innerHTML = '📋 Copy Review';
+        btn.classList.remove('copied');
+      }, 2500);
+    }).catch(() => {
+      // Fallback for older browsers
+      const ta = document.getElementById('review-textarea');
+      ta.select();
+      document.execCommand('copy');
+    });
+  }
+
+  // Allow editing the review
+  document.getElementById('review-textarea').addEventListener('input', function() {
+    currentReview = this.value;
+  });
+</script>
+</body>
+</html>
